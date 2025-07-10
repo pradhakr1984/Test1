@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World - Jedi Training Edition</title>
+    <title>Hello World - Jedi Training Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -64,21 +64,33 @@
         }
 
         .subtitle {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #4fc3f7;
             text-shadow: 0 0 10px #4fc3f7;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             animation: glow 2s ease-in-out infinite alternate;
             text-align: center;
         }
 
         .instructions {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #ffe81f;
+            text-align: center;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            animation: pulse 2s ease-in-out infinite;
+            max-width: 600px;
+            line-height: 1.4;
+        }
+
+        .encouragement {
+            font-size: 1rem;
+            color: #4ade80;
             text-align: center;
             margin-bottom: 2rem;
             opacity: 0.8;
-            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 10px #4ade80;
+            animation: bounce 3s ease-in-out infinite;
         }
 
         /* Lightsaber cursor */
@@ -160,60 +172,60 @@
         .floating-element {
             position: absolute;
             color: #ffe81f;
-            font-size: 1.2rem;
-            opacity: 0.6;
-            animation: floatAround 20s linear infinite;
+            font-size: 1.4rem;
+            opacity: 0.7;
+            animation: floatAround 25s linear infinite;
             text-shadow: 0 0 10px #ffe81f;
         }
 
         .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 3s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 6s; }
-        .floating-element:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 9s; }
-        .floating-element:nth-child(5) { top: 50%; left: 5%; animation-delay: 12s; }
-        .floating-element:nth-child(6) { top: 60%; right: 5%; animation-delay: 15s; }
+        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 4s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 8s; }
+        .floating-element:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 12s; }
+        .floating-element:nth-child(5) { top: 50%; left: 5%; animation-delay: 16s; }
+        .floating-element:nth-child(6) { top: 60%; right: 5%; animation-delay: 20s; }
 
         @keyframes floatAround {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
-            25% { transform: translate(50px, -30px) rotate(90deg); opacity: 0.8; }
-            50% { transform: translate(20px, -60px) rotate(180deg); opacity: 0.4; }
-            75% { transform: translate(-30px, -30px) rotate(270deg); opacity: 0.8; }
-            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.6; }
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.7; }
+            25% { transform: translate(60px, -40px) rotate(90deg); opacity: 1; }
+            50% { transform: translate(30px, -80px) rotate(180deg); opacity: 0.5; }
+            75% { transform: translate(-40px, -40px) rotate(270deg); opacity: 1; }
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.7; }
         }
 
         /* Particle effects */
         .spark {
             position: fixed;
-            width: 3px;
-            height: 3px;
+            width: 4px;
+            height: 4px;
             background: #ffe81f;
             border-radius: 50%;
             pointer-events: none;
             z-index: 800;
-            box-shadow: 0 0 6px #ffe81f;
+            box-shadow: 0 0 8px #ffe81f;
         }
 
         .force-wave {
             position: fixed;
-            border: 2px solid #4fc3f7;
+            border: 3px solid #4fc3f7;
             border-radius: 50%;
             pointer-events: none;
             z-index: 600;
-            animation: expandFade 1s ease-out forwards;
+            animation: expandFade 1.2s ease-out forwards;
         }
 
         @keyframes expandFade {
             0% { 
-                width: 20px; 
-                height: 20px; 
+                width: 30px; 
+                height: 30px; 
                 opacity: 1; 
-                box-shadow: 0 0 20px #4fc3f7; 
+                box-shadow: 0 0 30px #4fc3f7; 
             }
             100% { 
-                width: 200px; 
-                height: 200px; 
+                width: 250px; 
+                height: 250px; 
                 opacity: 0; 
-                box-shadow: 0 0 60px #4fc3f7; 
+                box-shadow: 0 0 80px #4fc3f7; 
             }
         }
 
@@ -228,8 +240,13 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
+            0%, 100% { opacity: 0.9; }
             50% { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
 
         .nav-button {
@@ -282,10 +299,36 @@
             top: 30px;
             left: 30px;
             color: #ffe81f;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            text-shadow: 0 0 10px #ffe81f;
+            text-shadow: 0 0 15px #ffe81f;
             z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid #ffe81f;
+        }
+
+        .achievement {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4ade80;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px #4ade80;
+            z-index: 1200;
+            opacity: 0;
+            pointer-events: none;
+            animation: achievementPop 2s ease-out forwards;
+        }
+
+        @keyframes achievementPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
 
         .lightsaber-colors {
@@ -294,23 +337,28 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 15px;
+            gap: 20px;
             z-index: 1000;
+            background: rgba(0,0,0,0.8);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 2px solid #ffe81f;
         }
 
         .color-button {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            border: 3px solid #ffe81f;
+            border: 4px solid #ffe81f;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            animation: colorPulse 3s ease-in-out infinite;
         }
 
         .color-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px currentColor;
+            transform: scale(1.2);
+            box-shadow: 0 0 25px currentColor;
         }
 
         .color-button.blue { background: #4fc3f7; }
@@ -318,21 +366,42 @@
         .color-button.green { background: #4ade80; }
         .color-button.purple { background: #a855f7; }
 
+        @keyframes colorPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
         .target {
             position: fixed;
-            width: 60px;
-            height: 60px;
-            border: 3px solid #ff4444;
+            width: 70px;
+            height: 70px;
+            border: 4px solid #ff4444;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,68,68,0.3) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255,68,68,0.4) 0%, transparent 70%);
             pointer-events: none;
             z-index: 400;
-            animation: targetFloat 4s ease-in-out infinite;
+            animation: targetFloat 3s ease-in-out infinite;
         }
 
         @keyframes targetFloat {
             0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-20px) scale(1.1); }
+            50% { transform: translateY(-25px) scale(1.1); }
+        }
+
+        .sound-effect {
+            position: fixed;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1100;
+            animation: soundEffect 1s ease-out forwards;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        @keyframes soundEffect {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5) translateY(-30px); }
         }
     </style>
 </head>
@@ -343,29 +412,34 @@
     </a>
     <a href="prashant-bio.html" class="nav-button" style="top: 130px;">
         <span class="button-icon">👤</span>
-        <span>Prashant Bio</span>
+        <span>Jedi Training</span>
     </a>
 
     <div class="score">
-        Force Level: <span id="score">0</span>
+        🏆 Jedi Points: <span id="score">0</span>
     </div>
 
     <div class="stars" id="stars"></div>
 
     <div class="floating-elements">
-        <div class="floating-element">⚔️ JEDI</div>
-        <div class="floating-element">🌌 FORCE</div>
-        <div class="floating-element">⭐ POWER</div>
-        <div class="floating-element">🚀 DESTINY</div>
-        <div class="floating-element">💫 BALANCE</div>
-        <div class="floating-element">🌠 WISDOM</div>
+        <div class="floating-element">⚔️ AWESOME!</div>
+        <div class="floating-element">🌟 AMAZING!</div>
+        <div class="floating-element">💫 COOL!</div>
+        <div class="floating-element">🚀 FANTASTIC!</div>
+        <div class="floating-element">✨ EPIC!</div>
+        <div class="floating-element">🌠 WOW!</div>
     </div>
 
     <div class="container">
         <h1 class="title">Hello World!</h1>
-        <p class="subtitle">Jedi Training Academy</p>
+        <p class="subtitle">🌟 Young Jedi Training Academy 🌟</p>
         <div class="instructions">
-            Move your lightsaber • Click to unleash Force powers • Hit targets to gain Force points
+            Move your lightsaber around the screen!<br>
+            Click anywhere to use awesome Force powers!<br>
+            Touch the red targets with your lightsaber to score points!
+        </div>
+        <div class="encouragement">
+            🚀 You're doing great, young Jedi! May the Force be with you! ⚔️
         </div>
     </div>
 
@@ -373,10 +447,10 @@
     <div class="lightsaber-hilt" id="lightsaber-hilt"></div>
 
     <div class="lightsaber-colors">
-        <div class="color-button blue" onclick="changeLightsaberColor('blue')"></div>
-        <div class="color-button red" onclick="changeLightsaberColor('red')"></div>
-        <div class="color-button green" onclick="changeLightsaberColor('green')"></div>
-        <div class="color-button purple" onclick="changeLightsaberColor('purple')"></div>
+        <div class="color-button blue" onclick="changeLightsaberColor('blue')" title="Blue Lightsaber"></div>
+        <div class="color-button red" onclick="changeLightsaberColor('red')" title="Red Lightsaber"></div>
+        <div class="color-button green" onclick="changeLightsaberColor('green')" title="Green Lightsaber"></div>
+        <div class="color-button purple" onclick="changeLightsaberColor('purple')" title="Purple Lightsaber"></div>
     </div>
 
     <script>
@@ -385,11 +459,17 @@
         let mouseX = 0;
         let mouseY = 0;
         let targets = [];
+        
+        const soundEffects = ['💥 WHOOSH!', '⚡ ZAP!', '✨ BOOM!', '🔥 POW!', '💫 BZZT!'];
+        const achievements = [
+            '🌟 Excellent!', '🚀 Fantastic!', '⚔️ Amazing!', '🏆 Incredible!', 
+            '💫 Awesome!', '✨ Outstanding!', '🌠 Brilliant!'
+        ];
 
         // Create star field
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 250; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.left = Math.random() * 100 + '%';
@@ -423,6 +503,42 @@
             lightsaberColor = color;
             const lightsaber = document.getElementById('lightsaber');
             lightsaber.className = `lightsaber ${color}`;
+            
+            // Add sound effect
+            createSoundEffect('🎨 Color changed!', mouseX, mouseY);
+        }
+
+        // Create sound effect text
+        function createSoundEffect(text, x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'sound-effect';
+            effect.textContent = text;
+            effect.style.left = x + 'px';
+            effect.style.top = y + 'px';
+            effect.style.color = getRandomColor();
+            document.body.appendChild(effect);
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 1000);
+        }
+
+        // Get random color
+        function getRandomColor() {
+            const colors = ['#ffe81f', '#4fc3f7', '#4ade80', '#ff4444', '#a855f7'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Show achievement
+        function showAchievement(text) {
+            const achievement = document.createElement('div');
+            achievement.className = 'achievement';
+            achievement.textContent = text;
+            document.body.appendChild(achievement);
+            
+            setTimeout(() => {
+                achievement.remove();
+            }, 2000);
         }
 
         // Create Force lightning effect
@@ -432,12 +548,12 @@
             lightning.style.left = x + 'px';
             lightning.style.top = y + 'px';
             
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 7; i++) {
                 const bolt = document.createElement('div');
                 bolt.className = 'lightning-bolt';
-                bolt.style.left = (Math.random() - 0.5) * 100 + 'px';
-                bolt.style.top = (Math.random() - 0.5) * 100 + 'px';
-                bolt.style.height = Math.random() * 80 + 20 + 'px';
+                bolt.style.left = (Math.random() - 0.5) * 120 + 'px';
+                bolt.style.top = (Math.random() - 0.5) * 120 + 'px';
+                bolt.style.height = Math.random() * 100 + 30 + 'px';
                 bolt.style.transform = `rotate(${Math.random() * 360}deg)`;
                 lightning.appendChild(bolt);
             }
@@ -446,24 +562,24 @@
             
             setTimeout(() => {
                 lightning.remove();
-            }, 200);
+            }, 300);
         }
 
         // Create Force wave
         function createForceWave(x, y) {
             const wave = document.createElement('div');
             wave.className = 'force-wave';
-            wave.style.left = (x - 10) + 'px';
-            wave.style.top = (y - 10) + 'px';
+            wave.style.left = (x - 15) + 'px';
+            wave.style.top = (y - 15) + 'px';
             document.body.appendChild(wave);
             
             setTimeout(() => {
                 wave.remove();
-            }, 1000);
+            }, 1200);
         }
 
         // Create sparks
-        function createSparks(x, y, count = 10) {
+        function createSparks(x, y, count = 15) {
             for (let i = 0; i < count; i++) {
                 const spark = document.createElement('div');
                 spark.className = 'spark';
@@ -471,7 +587,7 @@
                 spark.style.top = y + 'px';
                 
                 const angle = (Math.PI * 2 * i) / count;
-                const velocity = 50 + Math.random() * 50;
+                const velocity = 60 + Math.random() * 60;
                 const vx = Math.cos(angle) * velocity;
                 const vy = Math.sin(angle) * velocity;
                 
@@ -484,7 +600,7 @@
                 function animateSpark() {
                     sparkX += vx * 0.02;
                     sparkY += vy * 0.02;
-                    opacity -= 0.02;
+                    opacity -= 0.015;
                     
                     spark.style.left = sparkX + 'px';
                     spark.style.top = sparkY + 'px';
@@ -505,8 +621,8 @@
         function createTarget() {
             const target = document.createElement('div');
             target.className = 'target';
-            target.style.left = Math.random() * (window.innerWidth - 60) + 'px';
-            target.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+            target.style.left = Math.random() * (window.innerWidth - 70) + 'px';
+            target.style.top = Math.random() * (window.innerHeight - 70) + 'px';
             
             const targetData = {
                 element: target,
@@ -518,13 +634,13 @@
             targets.push(targetData);
             document.body.appendChild(target);
             
-            // Remove target after 5 seconds if not hit
+            // Remove target after 8 seconds if not hit
             setTimeout(() => {
                 if (!targetData.hit && target.parentNode) {
                     target.remove();
                     targets = targets.filter(t => t !== targetData);
                 }
-            }, 5000);
+            }, 8000);
         }
 
         // Check for target hits
@@ -533,26 +649,33 @@
                 if (target.hit) return;
                 
                 const distance = Math.sqrt(
-                    Math.pow(mouseX - (target.x + 30), 2) + 
-                    Math.pow(mouseY - (target.y + 30), 2)
+                    Math.pow(mouseX - (target.x + 35), 2) + 
+                    Math.pow(mouseY - (target.y + 35), 2)
                 );
                 
-                if (distance < 50) {
+                if (distance < 60) {
                     target.hit = true;
                     target.element.style.background = 'radial-gradient(circle, rgba(76,195,247,0.8) 0%, transparent 70%)';
                     target.element.style.borderColor = '#4fc3f7';
-                    target.element.style.boxShadow = '0 0 20px #4fc3f7';
+                    target.element.style.boxShadow = '0 0 30px #4fc3f7';
                     
-                    createSparks(target.x + 30, target.y + 30, 15);
+                    createSparks(target.x + 35, target.y + 35, 20);
                     score += 10;
                     document.getElementById('score').textContent = score;
+                    
+                    // Show achievement for milestones
+                    if (score % 50 === 0) {
+                        showAchievement(achievements[Math.floor(Math.random() * achievements.length)]);
+                    }
+                    
+                    createSoundEffect('🎯 HIT!', target.x + 35, target.y + 35);
                     
                     setTimeout(() => {
                         if (target.element.parentNode) {
                             target.element.remove();
                         }
                         targets.splice(index, 1);
-                    }, 500);
+                    }, 800);
                 }
             });
         }
@@ -563,7 +686,11 @@
         document.addEventListener('click', (e) => {
             createForceLightning(e.clientX, e.clientY);
             createForceWave(e.clientX, e.clientY);
-            createSparks(e.clientX, e.clientY, 8);
+            createSparks(e.clientX, e.clientY, 12);
+            
+            // Random sound effect
+            const randomEffect = soundEffects[Math.floor(Math.random() * soundEffects.length)];
+            createSoundEffect(randomEffect, e.clientX, e.clientY);
         });
 
         // Initialize
@@ -571,14 +698,15 @@
         
         // Create targets periodically
         setInterval(() => {
-            if (targets.length < 3) {
+            if (targets.length < 4) {
                 createTarget();
             }
-        }, 2000);
+        }, 3000);
 
         // Create initial targets
         setTimeout(() => createTarget(), 1000);
         setTimeout(() => createTarget(), 2000);
+        setTimeout(() => createTarget(), 3000);
     </script>
 </body>
 </html> 
