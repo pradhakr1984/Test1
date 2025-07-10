@@ -464,19 +464,106 @@
 
         .target {
             position: fixed;
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border: 4px solid #ff4444;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(255,68,68,0.4) 0%, transparent 70%);
             pointer-events: none;
             z-index: 400;
             animation: targetFloat 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #000;
+        }
+
+        .target.math {
+            border-color: #4fc3f7;
+            background: radial-gradient(circle, rgba(79,195,247,0.6) 0%, transparent 70%);
+        }
+
+        .target.word {
+            border-color: #4ade80;
+            background: radial-gradient(circle, rgba(74,222,128,0.6) 0%, transparent 70%);
+            font-size: 1.1rem;
+        }
+
+        .target.sequence {
+            border-color: #a855f7;
+            background: radial-gradient(circle, rgba(168,85,247,0.6) 0%, transparent 70%);
         }
 
         @keyframes targetFloat {
             0%, 100% { transform: translateY(0px) scale(1); }
             50% { transform: translateY(-25px) scale(1.1); }
+        }
+
+        .educational-progress {
+            position: fixed;
+            bottom: 130px;
+            left: 30px;
+            background: rgba(0,0,0,0.8);
+            color: #ffe81f;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 2px solid #ffe81f;
+            z-index: 1000;
+            font-size: 1rem;
+            text-shadow: 0 0 10px #ffe81f;
+            max-width: 250px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4fc3f7, #4ade80, #a855f7);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            animation: progressGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes progressGlow {
+            0% { box-shadow: 0 0 5px rgba(79,195,247,0.5); }
+            100% { box-shadow: 0 0 15px rgba(79,195,247,0.8); }
+        }
+
+        .learning-achievement {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 10, 46, 0.95);
+            color: #4ade80;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px #4ade80;
+            z-index: 1300;
+            opacity: 0;
+            pointer-events: none;
+            animation: learningPop 3s ease-out forwards;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 3px solid #4ade80;
+            text-align: center;
+        }
+
+        @keyframes learningPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
 
         .sound-effect {
@@ -508,6 +595,16 @@
 
     <div class="score">
         🏆 Jedi Points: <span id="score">0</span>
+    </div>
+
+    <div class="educational-progress">
+        <div>📚 Learning Progress</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div id="learningStats">
+            🧮 Math: <span id="mathCount">0</span> | 📖 Words: <span id="wordCount">0</span> | 🔢 Sequences: <span id="sequenceCount">0</span>
+        </div>
     </div>
 
     <div class="game-controls">
@@ -549,10 +646,10 @@
         <div class="instructions">
             Move your lightsaber around the screen!<br>
             Click anywhere to use awesome Force powers!<br>
-            Touch the red targets with your lightsaber to score points!
+            Hit the learning targets: 🧮 Math (blue) • 📖 Words (green) • 🔢 Sequences (purple)
         </div>
         <div class="encouragement">
-            🚀 You're doing great, young Jedi! May the Force be with you! ⚔️
+            🚀 Learn while you play, young Jedi! Knowledge is your greatest power! ⚔️
         </div>
     </div>
 
@@ -576,10 +673,54 @@
         let targetInterval;
         let gameStarted = false;
         
+        // Educational tracking
+        let mathProblemsCorrect = 0;
+        let wordsLearned = 0;
+        let sequencesCompleted = 0;
+        let totalLearningGoal = 30; // 10 of each type
+        
         const soundEffects = ['💥 WHOOSH!', '⚡ ZAP!', '✨ BOOM!', '🔥 POW!', '💫 BZZT!'];
         const achievements = [
             '🌟 Excellent!', '🚀 Fantastic!', '⚔️ Amazing!', '🏆 Incredible!', 
             '💫 Awesome!', '✨ Outstanding!', '🌠 Brilliant!'
+        ];
+
+        // Educational content
+        const mathProblems = {
+            easy: [ // For 6-year-old
+                { question: '2+3', answer: 5 },
+                { question: '4+1', answer: 5 },
+                { question: '3+2', answer: 5 },
+                { question: '6-2', answer: 4 },
+                { question: '5-1', answer: 4 },
+                { question: '7-3', answer: 4 },
+                { question: '2×2', answer: 4 },
+                { question: '3×2', answer: 6 },
+                { question: '1+4', answer: 5 },
+                { question: '8-4', answer: 4 }
+            ],
+            hard: [ // For 9-year-old
+                { question: '7×8', answer: 56 },
+                { question: '9×6', answer: 54 },
+                { question: '8×7', answer: 56 },
+                { question: '45÷9', answer: 5 },
+                { question: '42÷6', answer: 7 },
+                { question: '15+17', answer: 32 },
+                { question: '23+19', answer: 42 },
+                { question: '50-18', answer: 32 },
+                { question: '6×9', answer: 54 },
+                { question: '72÷8', answer: 9 }
+            ]
+        };
+
+        const vocabularyWords = [
+            'BRAVE', 'STRONG', 'SMART', 'KIND', 'HAPPY', 'SPACE', 'STAR', 'HERO',
+            'ADVENTURE', 'COURAGE', 'WISDOM', 'FRIEND', 'PEACE', 'LIGHT', 'FORCE'
+        ];
+
+        const sequences = [
+            [2, 4, 6, 8], [1, 3, 5, 7], [5, 10, 15, 20], [3, 6, 9, 12],
+            [1, 4, 7, 10], [2, 5, 8, 11], [10, 20, 30, 40], [1, 2, 4, 8]
         ];
 
         // Create star field
@@ -733,30 +874,89 @@
             }
         }
 
-        // Create training targets
+        // Create educational target
         function createTarget() {
             const target = document.createElement('div');
-            target.className = 'target';
-            target.style.left = Math.random() * (window.innerWidth - 70) + 'px';
-            target.style.top = Math.random() * (window.innerHeight - 70) + 'px';
+            const targetType = Math.random();
             
-            const targetData = {
-                element: target,
-                x: parseInt(target.style.left),
-                y: parseInt(target.style.top),
-                hit: false
-            };
+            let targetData;
+            
+            if (targetType < 0.4) { // 40% math problems
+                targetData = createMathTarget(target);
+            } else if (targetType < 0.7) { // 30% vocabulary
+                targetData = createWordTarget(target);
+            } else { // 30% sequences
+                targetData = createSequenceTarget(target);
+            }
+            
+            target.style.left = Math.random() * (window.innerWidth - 80) + 'px';
+            target.style.top = Math.random() * (window.innerHeight - 80) + 'px';
+            
+            targetData.x = parseInt(target.style.left);
+            targetData.y = parseInt(target.style.top);
             
             targets.push(targetData);
             document.body.appendChild(target);
             
-            // Remove target after 8 seconds if not hit
+            // Remove target after 10 seconds if not hit
             setTimeout(() => {
                 if (!targetData.hit && target.parentNode) {
                     target.remove();
                     targets = targets.filter(t => t !== targetData);
                 }
-            }, 8000);
+            }, 10000);
+        }
+
+        // Create math target
+        function createMathTarget(target) {
+            target.className = 'target math';
+            const difficulty = Math.random() < 0.6 ? 'easy' : 'hard'; // 60% easy for younger kids
+            const problemSet = mathProblems[difficulty];
+            const problem = problemSet[Math.floor(Math.random() * problemSet.length)];
+            
+            target.textContent = problem.question;
+            target.title = 'Math Problem: ' + problem.question;
+            
+            return {
+                element: target,
+                type: 'math',
+                problem: problem,
+                hit: false
+            };
+        }
+
+        // Create vocabulary target
+        function createWordTarget(target) {
+            target.className = 'target word';
+            const word = vocabularyWords[Math.floor(Math.random() * vocabularyWords.length)];
+            
+            target.textContent = word;
+            target.title = 'Vocabulary Word: ' + word;
+            
+            return {
+                element: target,
+                type: 'word',
+                word: word,
+                hit: false
+            };
+        }
+
+        // Create sequence target
+        function createSequenceTarget(target) {
+            target.className = 'target sequence';
+            const sequence = sequences[Math.floor(Math.random() * sequences.length)];
+            const displaySequence = sequence.slice(0, 3).join(',') + ',?';
+            
+            target.textContent = displaySequence;
+            target.title = 'Number Sequence: What comes next?';
+            
+            return {
+                element: target,
+                type: 'sequence',
+                sequence: sequence,
+                answer: sequence[3],
+                hit: false
+            };
         }
 
         // Check for target hits
@@ -767,17 +967,21 @@
                 if (target.hit) return;
                 
                 const distance = Math.sqrt(
-                    Math.pow(mouseX - (target.x + 35), 2) + 
-                    Math.pow(mouseY - (target.y + 35), 2)
+                    Math.pow(mouseX - (target.x + 40), 2) + 
+                    Math.pow(mouseY - (target.y + 40), 2)
                 );
                 
-                if (distance < 60) {
+                if (distance < 65) {
                     target.hit = true;
+                    
+                    // Educational feedback based on target type
+                    handleEducationalHit(target);
+                    
                     target.element.style.background = 'radial-gradient(circle, rgba(76,195,247,0.8) 0%, transparent 70%)';
                     target.element.style.borderColor = '#4fc3f7';
                     target.element.style.boxShadow = '0 0 30px #4fc3f7';
                     
-                    createSparks(target.x + 35, target.y + 35, 20);
+                    createSparks(target.x + 40, target.y + 40, 20);
                     score += 10;
                     document.getElementById('score').textContent = score;
                     
@@ -786,16 +990,65 @@
                         showAchievement(achievements[Math.floor(Math.random() * achievements.length)]);
                     }
                     
-                    createSoundEffect('🎯 HIT!', target.x + 35, target.y + 35);
-                    
                     setTimeout(() => {
                         if (target.element.parentNode) {
                             target.element.remove();
                         }
                         targets.splice(index, 1);
-                    }, 800);
+                    }, 1200);
                 }
             });
+        }
+
+        // Handle educational content when target is hit
+        function handleEducationalHit(target) {
+            let message = '';
+            let learningType = '';
+            
+            if (target.type === 'math') {
+                mathProblemsCorrect++;
+                message = `🧮 Math: ${target.problem.question} = ${target.problem.answer}`;
+                learningType = '🧮 Great Math Skills!';
+                document.getElementById('mathCount').textContent = mathProblemsCorrect;
+            } else if (target.type === 'word') {
+                wordsLearned++;
+                message = `📖 Word: "${target.word}" - You're building vocabulary!`;
+                learningType = '📖 Vocabulary Master!';
+                document.getElementById('wordCount').textContent = wordsLearned;
+            } else if (target.type === 'sequence') {
+                sequencesCompleted++;
+                message = `🔢 Sequence: ${target.sequence.join(',')} - Answer: ${target.answer}`;
+                learningType = '🔢 Pattern Detective!';
+                document.getElementById('sequenceCount').textContent = sequencesCompleted;
+            }
+            
+            // Show educational achievement
+            showLearningAchievement(learningType);
+            createSoundEffect(message.split(' - ')[0], target.x + 40, target.y - 20);
+            
+            // Update progress bar
+            const totalProgress = mathProblemsCorrect + wordsLearned + sequencesCompleted;
+            const progressPercent = Math.min((totalProgress / totalLearningGoal) * 100, 100);
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+            
+            // Special achievement for completing learning goals
+            if (totalProgress === totalLearningGoal) {
+                showLearningAchievement('🎓 Young Jedi Scholar! Learning Complete!');
+            } else if (totalProgress % 10 === 0) {
+                showLearningAchievement('📚 Learning Milestone Reached!');
+            }
+        }
+
+        // Show learning achievement
+        function showLearningAchievement(text) {
+            const achievement = document.createElement('div');
+            achievement.className = 'learning-achievement';
+            achievement.textContent = text;
+            document.body.appendChild(achievement);
+            
+            setTimeout(() => {
+                achievement.remove();
+            }, 3000);
         }
 
         // Toggle pause function
@@ -862,6 +1115,15 @@
             score = 0;
             document.getElementById('score').textContent = score;
             
+            // Reset educational progress
+            mathProblemsCorrect = 0;
+            wordsLearned = 0;
+            sequencesCompleted = 0;
+            document.getElementById('mathCount').textContent = mathProblemsCorrect;
+            document.getElementById('wordCount').textContent = wordsLearned;
+            document.getElementById('sequenceCount').textContent = sequencesCompleted;
+            document.getElementById('progressFill').style.width = '0%';
+            
             // Remove all targets
             targets.forEach(target => {
                 if (target.element.parentNode) {
@@ -871,7 +1133,7 @@
             targets = [];
             
             // Remove any active effects
-            const effects = document.querySelectorAll('.spark, .force-wave, .force-lightning, .sound-effect, .achievement');
+            const effects = document.querySelectorAll('.spark, .force-wave, .force-lightning, .sound-effect, .achievement, .learning-achievement');
             effects.forEach(effect => {
                 if (effect.parentNode) {
                     effect.remove();
@@ -889,7 +1151,7 @@
             
             // Show restart message
             createSoundEffect('🚀 Game Restarted!', window.innerWidth / 2, window.innerHeight / 2);
-            showAchievement('🎮 New Training Session!');
+            showLearningAchievement('🎮 New Learning Adventure Begins!');
         }
 
         // Start target generation
