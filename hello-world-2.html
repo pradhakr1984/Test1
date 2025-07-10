@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World - Jedi Training Academy</title>
+    <title>Jedi Space Adventure Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -18,7 +18,7 @@
             min-height: 100vh;
             overflow: hidden;
             position: relative;
-            cursor: none;
+            cursor: default;
         }
 
         /* Star field background */
@@ -29,6 +29,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
 
         .star {
@@ -43,192 +44,310 @@
             100% { opacity: 1; transform: scale(1.2); }
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        /* Main game container */
+        .game-container {
             position: relative;
             z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #ffe81f;
-            text-shadow: 0 0 20px #ffe81f, 0 0 40px #fff200, 0 0 60px #fff200;
-            margin-bottom: 1rem;
-            animation: float 3s ease-in-out infinite;
-            text-align: center;
-        }
-
-        .subtitle {
-            font-size: 1.8rem;
-            color: #4fc3f7;
-            text-shadow: 0 0 10px #4fc3f7;
-            margin-bottom: 1rem;
-            animation: glow 2s ease-in-out infinite alternate;
-            text-align: center;
-        }
-
-        .instructions {
-            font-size: 1.1rem;
-            color: #ffe81f;
-            text-align: center;
-            margin-bottom: 1rem;
-            opacity: 0.9;
-            animation: pulse 2s ease-in-out infinite;
-            max-width: 600px;
-            line-height: 1.4;
-        }
-
-        .encouragement {
-            font-size: 1rem;
-            color: #4ade80;
-            text-align: center;
-            margin-bottom: 2rem;
-            opacity: 0.8;
-            text-shadow: 0 0 10px #4ade80;
-            animation: bounce 3s ease-in-out infinite;
-        }
-
-        /* Lightsaber cursor */
-        .lightsaber {
-            position: fixed;
-            width: 8px;
-            height: 120px;
-            background: linear-gradient(to top, transparent 0%, #4fc3f7 20%, #ffffff 50%, #4fc3f7 80%, transparent 100%);
-            border-radius: 4px;
-            box-shadow: 0 0 20px #4fc3f7, 0 0 40px #4fc3f7, 0 0 60px #4fc3f7;
-            pointer-events: none;
-            z-index: 1000;
-            transform-origin: bottom center;
-            animation: saberHum 0.1s ease-in-out infinite alternate;
-        }
-
-        .lightsaber.red {
-            background: linear-gradient(to top, transparent 0%, #ff4444 20%, #ffffff 50%, #ff4444 80%, transparent 100%);
-            box-shadow: 0 0 20px #ff4444, 0 0 40px #ff4444, 0 0 60px #ff4444;
-        }
-
-        .lightsaber.green {
-            background: linear-gradient(to top, transparent 0%, #4ade80 20%, #ffffff 50%, #4ade80 80%, transparent 100%);
-            box-shadow: 0 0 20px #4ade80, 0 0 40px #4ade80, 0 0 60px #4ade80;
-        }
-
-        .lightsaber.purple {
-            background: linear-gradient(to top, transparent 0%, #a855f7 20%, #ffffff 50%, #a855f7 80%, transparent 100%);
-            box-shadow: 0 0 20px #a855f7, 0 0 40px #a855f7, 0 0 60px #a855f7;
-        }
-
-        .lightsaber-hilt {
-            position: fixed;
-            width: 12px;
-            height: 30px;
-            background: linear-gradient(to bottom, #c0c0c0, #808080, #404040);
-            border-radius: 2px;
-            pointer-events: none;
-            z-index: 999;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
-        }
-
-        @keyframes saberHum {
-            0% { opacity: 0.9; }
-            100% { opacity: 1; }
-        }
-
-        /* Force powers */
-        .force-lightning {
-            position: fixed;
-            pointer-events: none;
-            z-index: 500;
-        }
-
-        .lightning-bolt {
-            position: absolute;
-            width: 2px;
-            background: linear-gradient(to bottom, #ffffff, #4fc3f7, #ffffff);
-            box-shadow: 0 0 10px #4fc3f7;
-            animation: lightning 0.1s ease-in-out infinite;
-        }
-
-        @keyframes lightning {
-            0%, 100% { opacity: 1; transform: scaleY(1); }
-            50% { opacity: 0.7; transform: scaleY(1.1); }
-        }
-
-        /* Floating objects */
-        .floating-elements {
+        /* Header with navigation and progress */
+        .game-header {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 5;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(10,10,46,0.8));
+            border-bottom: 2px solid #ffe81f;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .floating-element {
-            position: absolute;
+        .nav-button {
+            background: linear-gradient(45deg, #ffe81f, #ffd700);
+            color: #000;
+            border: 2px solid #ffe81f;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(255, 232, 31, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 232, 31, 0.8);
+        }
+
+        .jedi-rank {
+            color: #4fc3f7;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #4fc3f7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-button {
+            background: linear-gradient(45deg, #4fc3f7, #2563eb);
+            color: #fff;
+            border: 2px solid #4fc3f7;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 0 10px rgba(79, 195, 247, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(79, 195, 247, 0.8);
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 20px;
+        }
+
+        /* Mission Selection Screen */
+        .mission-select {
+            text-align: center;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .mission-title {
+            font-size: 3rem;
+            font-weight: 900;
             color: #ffe81f;
+            text-shadow: 0 0 20px #ffe81f, 0 0 40px #fff200;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .mission-subtitle {
             font-size: 1.4rem;
-            opacity: 0.7;
-            animation: floatAround 25s linear infinite;
+            color: #4fc3f7;
+            text-shadow: 0 0 10px #4fc3f7;
+            margin-bottom: 3rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .planets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+
+        .planet-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(10,10,46,0.9));
+            border: 3px solid #4fc3f7;
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
+            animation: planetFloat 4s ease-in-out infinite;
+        }
+
+        .planet-card:hover {
+            transform: scale(1.05) translateY(-10px);
+            border-color: #ffe81f;
+            box-shadow: 0 0 30px rgba(255, 232, 31, 0.6);
+        }
+
+        .planet-card.math { border-color: #4fc3f7; }
+        .planet-card.words { border-color: #4ade80; }
+        .planet-card.logic { border-color: #a855f7; }
+
+        .planet-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+            animation: planetSpin 8s linear infinite;
+        }
+
+        .planet-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffe81f;
+            margin-bottom: 10px;
             text-shadow: 0 0 10px #ffe81f;
         }
 
-        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 4s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 8s; }
-        .floating-element:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 12s; }
-        .floating-element:nth-child(5) { top: 50%; left: 5%; animation-delay: 16s; }
-        .floating-element:nth-child(6) { top: 60%; right: 5%; animation-delay: 20s; }
-
-        @keyframes floatAround {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.7; }
-            25% { transform: translate(60px, -40px) rotate(90deg); opacity: 1; }
-            50% { transform: translate(30px, -80px) rotate(180deg); opacity: 0.5; }
-            75% { transform: translate(-40px, -40px) rotate(270deg); opacity: 1; }
-            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.7; }
+        .planet-description {
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
         }
 
-        /* Particle effects */
-        .spark {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: #ffe81f;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 800;
-            box-shadow: 0 0 8px #ffe81f;
+        .planet-progress {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
         }
 
-        .force-wave {
-            position: fixed;
-            border: 3px solid #4fc3f7;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 600;
-            animation: expandFade 1.2s ease-out forwards;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4fc3f7, #ffe81f);
+            border-radius: 4px;
+            transition: width 0.5s ease;
         }
 
-        @keyframes expandFade {
-            0% { 
-                width: 30px; 
-                height: 30px; 
-                opacity: 1; 
-                box-shadow: 0 0 30px #4fc3f7; 
-            }
-            100% { 
-                width: 250px; 
-                height: 250px; 
-                opacity: 0; 
-                box-shadow: 0 0 80px #4fc3f7; 
-            }
+        .planet-status {
+            font-size: 0.9rem;
+            color: #4fc3f7;
+            font-weight: bold;
         }
 
+        /* Mission Screen */
+        .mission-screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .mission-header {
+            margin-bottom: 30px;
+        }
+
+        .mission-planet-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffe81f;
+            text-shadow: 0 0 20px #ffe81f;
+            margin-bottom: 10px;
+        }
+
+        .mission-story {
+            font-size: 1.2rem;
+            color: #4fc3f7;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            border: 2px solid #4fc3f7;
+        }
+
+        .challenge-container {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(10,10,46,0.9));
+            border: 3px solid #ffe81f;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 20px;
+        }
+
+        .challenge-question {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #fff;
+        }
+
+        .challenge-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-button {
+            background: linear-gradient(45deg, #4fc3f7, #2563eb);
+            color: #fff;
+            border: 2px solid #4fc3f7;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.4);
+        }
+
+        .option-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(79, 195, 247, 0.8);
+        }
+
+        .option-button.correct {
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            border-color: #4ade80;
+            animation: correctPulse 0.6s ease-in-out;
+        }
+
+        .option-button.incorrect {
+            background: linear-gradient(45deg, #ff4444, #dc2626);
+            border-color: #ff4444;
+            animation: incorrectShake 0.6s ease-in-out;
+        }
+
+        .mission-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            background: linear-gradient(45deg, #6b7280, #4b5563);
+            color: #fff;
+            border: 2px solid #6b7280;
+            padding: 12px 20px;
+            border-radius: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(45deg, #4b5563, #6b7280);
+            transform: scale(1.05);
+        }
+
+        .mission-progress {
+            color: #ffe81f;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ffe81f;
+        }
+
+        /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
@@ -239,721 +358,401 @@
             100% { text-shadow: 0 0 20px #4fc3f7, 0 0 30px #4fc3f7; }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.9; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes bounce {
+        @keyframes planetFloat {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-5px); }
         }
 
-        .nav-button {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 1000;
-            background: linear-gradient(45deg, #ffe81f, #ffd700);
-            color: #000;
-            border: 2px solid #ffe81f;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 0 20px rgba(255, 232, 31, 0.5);
-            transition: all 0.3s ease;
-            animation: buttonGlow 2s ease-in-out infinite alternate;
-        }
-        
-        .nav-button:hover {
-            transform: scale(1.1) rotate(-2deg);
-            box-shadow: 0 0 30px rgba(255, 232, 31, 0.8);
-            background: linear-gradient(45deg, #ffd700, #ffe81f);
-            border-color: #fff;
-        }
-        
-        @keyframes buttonGlow {
-            0% { box-shadow: 0 0 20px rgba(255, 232, 31, 0.5); }
-            100% { box-shadow: 0 0 30px rgba(255, 232, 31, 0.8), 0 0 40px rgba(255, 255, 255, 0.3); }
-        }
-        
-        .button-icon {
-            font-size: 1.2rem;
-            animation: spin 3s linear infinite;
-        }
-        
-        @keyframes spin {
+        @keyframes planetSpin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
-        .score {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            color: #ffe81f;
-            font-size: 1.4rem;
-            font-weight: bold;
-            text-shadow: 0 0 15px #ffe81f;
-            z-index: 1000;
-            background: rgba(0,0,0,0.7);
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: 2px solid #ffe81f;
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
-        .game-controls {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 1000;
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
-        .control-button {
-            background: linear-gradient(45deg, #4fc3f7, #2563eb);
-            color: #fff;
-            border: 2px solid #4fc3f7;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 15px rgba(79, 195, 247, 0.4);
-            transition: all 0.3s ease;
-            animation: controlGlow 2s ease-in-out infinite alternate;
-        }
-
-        .control-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(79, 195, 247, 0.8);
-            background: linear-gradient(45deg, #2563eb, #4fc3f7);
-        }
-
-        .control-button:active {
-            transform: scale(0.95);
-        }
-
-        .control-button.paused {
-            background: linear-gradient(45deg, #ff4444, #ff6b6b);
-            border-color: #ff4444;
-            box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
-        }
-
-        .control-button.paused:hover {
-            background: linear-gradient(45deg, #ff6b6b, #ff4444);
-            box-shadow: 0 0 25px rgba(255, 68, 68, 0.8);
-        }
-
-        @keyframes controlGlow {
-            0% { box-shadow: 0 0 15px rgba(79, 195, 247, 0.4); }
-            100% { box-shadow: 0 0 25px rgba(79, 195, 247, 0.6); }
-        }
-
-        .pause-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .pause-message {
-            background: rgba(10, 10, 46, 0.9);
-            color: #ffe81f;
-            padding: 40px 60px;
-            border-radius: 20px;
-            border: 3px solid #ffe81f;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(255, 232, 31, 0.5);
-        }
-
-        .pause-message h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px #ffe81f;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .pause-message p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-
+        /* Achievement popup */
         .achievement {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(10,10,46,0.95));
             color: #4ade80;
             font-size: 2rem;
             font-weight: bold;
             text-shadow: 0 0 20px #4ade80;
-            z-index: 1200;
+            z-index: 2000;
             opacity: 0;
             pointer-events: none;
-            animation: achievementPop 2s ease-out forwards;
+            padding: 30px 50px;
+            border-radius: 20px;
+            border: 3px solid #4ade80;
+            text-align: center;
+            animation: achievementPop 3s ease-out forwards;
         }
 
         @keyframes achievementPop {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
             80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
 
-        .lightsaber-colors {
+        /* Story cutscene */
+        .story-cutscene {
             position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 1000;
-            background: rgba(0,0,0,0.8);
-            padding: 15px 25px;
-            border-radius: 50px;
-            border: 2px solid #ffe81f;
-        }
-
-        .color-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 4px solid #ffe81f;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            animation: colorPulse 3s ease-in-out infinite;
-        }
-
-        .color-button:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 25px currentColor;
-        }
-
-        .color-button.blue { background: #4fc3f7; }
-        .color-button.red { background: #ff4444; }
-        .color-button.green { background: #4ade80; }
-        .color-button.purple { background: #a855f7; }
-
-        @keyframes colorPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .target {
-            position: fixed;
-            width: 80px;
-            height: 80px;
-            border: 4px solid #ff4444;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,68,68,0.4) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 400;
-            animation: targetFloat 3s ease-in-out infinite;
-            display: flex;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 1.4rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px #000;
+            z-index: 3000;
         }
 
-        .target.math {
-            border-color: #4fc3f7;
-            background: radial-gradient(circle, rgba(79,195,247,0.6) 0%, transparent 70%);
-        }
-
-        .target.word {
-            border-color: #4ade80;
-            background: radial-gradient(circle, rgba(74,222,128,0.6) 0%, transparent 70%);
-            font-size: 1.1rem;
-        }
-
-        .target.sequence {
-            border-color: #a855f7;
-            background: radial-gradient(circle, rgba(168,85,247,0.6) 0%, transparent 70%);
-        }
-
-        @keyframes targetFloat {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-25px) scale(1.1); }
-        }
-
-        .educational-progress {
-            position: fixed;
-            bottom: 130px;
-            left: 30px;
-            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(10,10,46,0.9));
-            color: #ffe81f;
-            padding: 20px 25px;
-            border-radius: 20px;
-            border: 3px solid #ffe81f;
-            z-index: 1000;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-shadow: 0 0 15px #ffe81f;
-            max-width: 280px;
-            box-shadow: 0 0 30px rgba(255, 232, 31, 0.6);
-            animation: educationGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes educationGlow {
-            0% { 
-                box-shadow: 0 0 30px rgba(255, 232, 31, 0.6);
-                border-color: #ffe81f;
-            }
-            100% { 
-                box-shadow: 0 0 40px rgba(255, 232, 31, 0.8), 0 0 60px rgba(79, 195, 247, 0.4);
-                border-color: #4fc3f7;
-            }
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-            margin: 8px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4fc3f7, #4ade80, #a855f7);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-            animation: progressGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes progressGlow {
-            0% { box-shadow: 0 0 5px rgba(79,195,247,0.5); }
-            100% { box-shadow: 0 0 15px rgba(79,195,247,0.8); }
-        }
-
-        .learning-achievement {
-            position: fixed;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(10, 10, 46, 0.95);
-            color: #4ade80;
-            font-size: 1.8rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px #4ade80;
-            z-index: 1300;
-            opacity: 0;
-            pointer-events: none;
-            animation: learningPop 3s ease-out forwards;
-            padding: 20px 40px;
-            border-radius: 15px;
-            border: 3px solid #4ade80;
+        .cutscene-content {
+            max-width: 600px;
             text-align: center;
+            color: #ffe81f;
+            padding: 40px;
         }
 
-        @keyframes learningPop {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-            85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
-        }
-
-        .sound-effect {
-            position: fixed;
-            color: #fff;
-            font-size: 1.5rem;
+        .cutscene-title {
+            font-size: 2.5rem;
             font-weight: bold;
-            pointer-events: none;
-            z-index: 1100;
-            animation: soundEffect 1s ease-out forwards;
-            text-shadow: 0 0 10px currentColor;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ffe81f;
         }
 
-        @keyframes soundEffect {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1.5) translateY(-30px); }
+        .cutscene-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #4fc3f7;
+        }
+
+        .cutscene-button {
+            background: linear-gradient(45deg, #ffe81f, #ffd700);
+            color: #000;
+            border: 2px solid #ffe81f;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 232, 31, 0.5);
+        }
+
+        .cutscene-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 232, 31, 0.8);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .mission-title { font-size: 2rem; }
+            .planets-grid { grid-template-columns: 1fr; }
+            .planet-card { padding: 20px; }
+            .game-header { padding: 10px 20px; }
+            .challenge-question { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="nav-button">
-        <span class="button-icon">⭐</span>
-        <span>Classic Star Wars</span>
-    </a>
-    <a href="prashant-bio.html" class="nav-button" style="top: 130px;">
-        <span class="button-icon">👤</span>
-        <span>Prashant Bio</span>
-    </a>
-
-    <div class="score">
-        🏆 Jedi Points: <span id="score">0</span>
-    </div>
-
-    <div class="educational-progress">
-        <div>📚 Learning Progress</div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-        </div>
-        <div id="learningStats">
-            🧮 Math: <span id="mathCount">0</span> | 📖 Words: <span id="wordCount">0</span> | 🔢 Sequences: <span id="sequenceCount">0</span>
-        </div>
-    </div>
-
-    <div class="game-controls">
-        <button class="control-button" id="audioBtn" onclick="toggleAudio()">
-            <span id="audioIcon">🔊</span>
-            <span id="audioText">Enable Audio</span>
-        </button>
-        <button class="control-button" id="pauseBtn" onclick="togglePause()">
-            <span id="pauseIcon">⏸️</span>
-            <span id="pauseText">Pause</span>
-        </button>
-    </div>
-
-    <div class="pause-overlay" id="pauseOverlay">
-        <div class="pause-message">
-            <h2>⏸️ Game Paused</h2>
-            <p>The Force is taking a break...</p>
-            <button class="control-button" onclick="togglePause()">
-                <span>▶️</span>
-                <span>Resume Training</span>
-            </button>
-        </div>
-    </div>
-
+    <!-- Stars background -->
     <div class="stars" id="stars"></div>
 
-    <div class="floating-elements">
-        <div class="floating-element">⚔️ AWESOME!</div>
-        <div class="floating-element">🌟 AMAZING!</div>
-        <div class="floating-element">💫 COOL!</div>
-        <div class="floating-element">🚀 FANTASTIC!</div>
-        <div class="floating-element">✨ EPIC!</div>
-        <div class="floating-element">🌠 WOW!</div>
+    <!-- Game container -->
+    <div class="game-container">
+        <!-- Header -->
+        <div class="game-header">
+            <a href="index.html" class="nav-button">
+                <span>⭐</span>
+                <span>Classic Star Wars</span>
+            </a>
+            
+            <div class="jedi-rank">
+                <span id="rankIcon">🎓</span>
+                <span id="rankText">Jedi Padawan</span>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-button" id="audioBtn" onclick="toggleAudio()">
+                    <span id="audioIcon">🔊</span>
+                    <span id="audioText">Audio</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Mission Selection Screen -->
+            <div class="mission-select" id="missionSelect">
+                <h1 class="mission-title">🚀 Jedi Space Academy 🚀</h1>
+                <p class="mission-subtitle">Choose your adventure, young Jedi! Each planet has unique challenges to master.</p>
+                
+                <div class="planets-grid">
+                    <!-- Math Planet -->
+                    <div class="planet-card math" onclick="selectPlanet('math')">
+                        <span class="planet-icon">🪐</span>
+                        <div class="planet-name">Calculon Prime</div>
+                        <div class="planet-description">
+                            Help R2-D2 repair the Death Star's computers! Solve math problems to restore power to the galaxy.
+                        </div>
+                        <div class="planet-progress">
+                            <div class="progress-fill" id="mathProgress" style="width: 0%"></div>
+                        </div>
+                        <div class="planet-status" id="mathStatus">Ready for Adventure!</div>
+                    </div>
+
+                    <!-- Words Planet -->
+                    <div class="planet-card words" onclick="selectPlanet('words')">
+                        <span class="planet-icon">🌍</span>
+                        <div class="planet-name">Vocabularis</div>
+                        <div class="planet-description">
+                            Decode secret Rebel messages! Learn powerful words to communicate with the Resistance.
+                        </div>
+                        <div class="planet-progress">
+                            <div class="progress-fill" id="wordsProgress" style="width: 0%"></div>
+                        </div>
+                        <div class="planet-status" id="wordsStatus">Ready for Adventure!</div>
+                    </div>
+
+                    <!-- Logic Planet -->
+                    <div class="planet-card logic" onclick="selectPlanet('logic')">
+                        <span class="planet-icon">🔮</span>
+                        <div class="planet-name">Pattern Nexus</div>
+                        <div class="planet-description">
+                            Unlock ancient Jedi wisdom! Solve these sequences to unlock hidden Force powers and wisdom.
+                        </div>
+                        <div class="planet-progress">
+                            <div class="progress-fill" id="logicProgress" style="width: 0%"></div>
+                        </div>
+                        <div class="planet-status" id="logicStatus">Ready for Adventure!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mission Screen -->
+            <div class="mission-screen" id="missionScreen">
+                <div class="mission-header">
+                    <h2 class="mission-planet-name" id="currentPlanetName">Planet Name</h2>
+                    <div class="mission-story" id="missionStory">Mission story will appear here...</div>
+                </div>
+
+                <div class="challenge-container">
+                    <div class="challenge-question" id="challengeQuestion">Question will appear here</div>
+                    <div class="challenge-options" id="challengeOptions">
+                        <!-- Options will be generated here -->
+                    </div>
+                </div>
+
+                <div class="mission-controls">
+                    <button class="back-button" onclick="returnToMissionSelect()">
+                        ← Back to Space Map
+                    </button>
+                    <div class="mission-progress" id="missionProgressText">
+                        Mission 1 of 5
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <h1 class="title">Hello World!</h1>
-        <p class="subtitle">🌟 Young Jedi Training Academy 🌟</p>
-        <div class="instructions">
-            ⚔️ Move your lightsaber to hit the colorful learning targets!<br>
-            🧮 <strong>BLUE targets = Math Problems</strong> • 📖 <strong>GREEN targets = Vocabulary Words</strong> • 🔢 <strong>PURPLE targets = Number Sequences</strong><br>
-            💥 Click anywhere to use awesome Force powers!
+    <!-- Story Cutscene -->
+    <div class="story-cutscene" id="storyCutscene">
+        <div class="cutscene-content">
+            <h2 class="cutscene-title" id="cutsceneTitle">Achievement Unlocked!</h2>
+            <p class="cutscene-text" id="cutsceneText">Story text will appear here...</p>
+            <button class="cutscene-button" onclick="closeCutscene()">Continue Adventure</button>
         </div>
-        <div class="encouragement">
-            🚀 Learn while you play, young Jedi! Knowledge is your greatest power! ⚔️
-        </div>
-    </div>
-
-    <div class="lightsaber" id="lightsaber"></div>
-    <div class="lightsaber-hilt" id="lightsaber-hilt"></div>
-
-    <div class="lightsaber-colors">
-        <div class="color-button blue" onclick="changeLightsaberColor('blue')" title="Blue Lightsaber"></div>
-        <div class="color-button red" onclick="changeLightsaberColor('red')" title="Red Lightsaber"></div>
-        <div class="color-button green" onclick="changeLightsaberColor('green')" title="Green Lightsaber"></div>
-        <div class="color-button purple" onclick="changeLightsaberColor('purple')" title="Purple Lightsaber"></div>
     </div>
 
     <script>
-        let score = 0;
-        let lightsaberColor = 'blue';
-        let mouseX = 0;
-        let mouseY = 0;
-        let targets = [];
-        let isPaused = false;
-        let targetInterval;
-        let gameStarted = false;
-        
-        // Educational tracking
-        let mathProblemsCorrect = 0;
-        let wordsLearned = 0;
-        let sequencesCompleted = 0;
-        let totalLearningGoal = 30; // 10 of each type
-        
-        // Audio system
-        let audioContext;
-        let audioEnabled = false;
-        let lightsaberHumGain;
-        let lightsaberOscillator;
-        
-        const soundEffects = ['💥 WHOOSH!', '⚡ ZAP!', '✨ BOOM!', '🔥 POW!', '💫 BZZT!'];
-        const achievements = [
-            '🌟 Excellent!', '🚀 Fantastic!', '⚔️ Amazing!', '🏆 Incredible!', 
-            '💫 Awesome!', '✨ Outstanding!', '🌠 Brilliant!'
-        ];
-
-        // Educational content
-        const mathProblems = {
-            easy: [ // For 6-year-old
-                { question: '2+3', answer: 5 },
-                { question: '4+1', answer: 5 },
-                { question: '3+2', answer: 5 },
-                { question: '6-2', answer: 4 },
-                { question: '5-1', answer: 4 },
-                { question: '7-3', answer: 4 },
-                { question: '2×2', answer: 4 },
-                { question: '3×2', answer: 6 },
-                { question: '1+4', answer: 5 },
-                { question: '8-4', answer: 4 }
-            ],
-            hard: [ // For 9-year-old
-                { question: '7×8', answer: 56 },
-                { question: '9×6', answer: 54 },
-                { question: '8×7', answer: 56 },
-                { question: '45÷9', answer: 5 },
-                { question: '42÷6', answer: 7 },
-                { question: '15+17', answer: 32 },
-                { question: '23+19', answer: 42 },
-                { question: '50-18', answer: 32 },
-                { question: '6×9', answer: 54 },
-                { question: '72÷8', answer: 9 }
-            ]
+        // Game state
+        let gameState = {
+            currentPlanet: null,
+            currentMission: 0,
+            planetProgress: {
+                math: 0,
+                words: 0,
+                logic: 0
+            },
+            jediRank: 0,
+            audioEnabled: false,
+            audioContext: null
         };
 
-        const vocabularyWords = [
-            'BRAVE', 'STRONG', 'SMART', 'KIND', 'HAPPY', 'SPACE', 'STAR', 'HERO',
-            'ADVENTURE', 'COURAGE', 'WISDOM', 'FRIEND', 'PEACE', 'LIGHT', 'FORCE'
+        // Mission data
+        const planetData = {
+            math: {
+                name: "Calculon Prime",
+                icon: "🪐",
+                story: "R2-D2 needs your help! The Death Star's computers are malfunctioning. Use your math skills to restore power and save the galaxy!",
+                missions: [
+                    {
+                        story: "R2-D2 beeps frantically! The hyperdrive calculations are wrong!",
+                        question: "What is 3 + 4?",
+                        options: ["6", "7", "8", "9"],
+                        correct: 1,
+                        celebration: "🚀 Excellent! The hyperdrive is working again!"
+                    },
+                    {
+                        story: "The Death Star's shield generator needs power calculations!",
+                        question: "What is 5 × 2?",
+                        options: ["8", "10", "12", "15"],
+                        correct: 1,
+                        celebration: "⚡ Amazing! The shields are back online!"
+                    },
+                    {
+                        story: "Obi-Wan needs help calculating the number of escape pods!",
+                        question: "What is 12 ÷ 3?",
+                        options: ["3", "4", "5", "6"],
+                        correct: 1,
+                        celebration: "🛸 Perfect! Everyone can escape safely!"
+                    },
+                    {
+                        story: "Luke needs to calculate his X-wing's fuel consumption!",
+                        question: "What is 8 - 3?",
+                        options: ["4", "5", "6", "7"],
+                        correct: 1,
+                        celebration: "✈️ Great job! Luke has enough fuel for the mission!"
+                    },
+                    {
+                        story: "The Millennium Falcon needs navigation coordinates!",
+                        question: "What is 6 + 7?",
+                        options: ["12", "13", "14", "15"],
+                        correct: 1,
+                        celebration: "🌟 Incredible! Han Solo found the secret base!"
+                    }
+                ]
+            },
+            words: {
+                name: "Vocabularis",
+                icon: "🌍",
+                story: "The Rebel Alliance needs you to decode secret messages! Learn powerful words to help the Resistance communicate safely.",
+                missions: [
+                    {
+                        story: "Princess Leia sent a coded message! What does this word mean?",
+                        question: "What does 'BRAVE' mean?",
+                        options: ["Scared", "Courageous", "Tired", "Hungry"],
+                        correct: 1,
+                        celebration: "👑 Excellent! Leia's message is decoded!"
+                    },
+                    {
+                        story: "Yoda left a wisdom scroll! Can you understand it?",
+                        question: "What does 'WISDOM' mean?",
+                        options: ["Knowledge", "Food", "Sleep", "Fast"],
+                        correct: 0,
+                        celebration: "🧙‍♂️ Wonderful! You understand Yoda's teaching!"
+                    },
+                    {
+                        story: "The Jedi Council needs you to understand this important word!",
+                        question: "What does 'PEACE' mean?",
+                        options: ["War", "Calm & Harmony", "Noise", "Running"],
+                        correct: 1,
+                        celebration: "☮️ Perfect! The galaxy is closer to peace!"
+                    },
+                    {
+                        story: "C-3PO is translating an ancient text! Help him understand!",
+                        question: "What does 'FORCE' mean in Star Wars?",
+                        options: ["Push hard", "Magic power", "Energy field", "Spaceship"],
+                        correct: 2,
+                        celebration: "🌌 Amazing! C-3PO's translation is complete!"
+                    },
+                    {
+                        story: "Chewbacca found an old Wookiee saying! What does it mean?",
+                        question: "What does 'FRIENDSHIP' mean?",
+                        options: ["Being alone", "Caring bond", "Fighting", "Eating"],
+                        correct: 1,
+                        celebration: "🐻 Roooaaaar! Chewie is so happy!"
+                    }
+                ]
+            },
+            logic: {
+                name: "Pattern Nexus",
+                icon: "🔮",
+                story: "Ancient Jedi temples hold mystical patterns! Solve these sequences to unlock hidden Force powers and wisdom.",
+                missions: [
+                    {
+                        story: "Master Yoda's meditation chamber has a glowing pattern!",
+                        question: "What comes next? 2, 4, 6, ?",
+                        options: ["7", "8", "9", "10"],
+                        correct: 1,
+                        celebration: "🧘‍♂️ Excellent! Yoda's meditation power is unlocked!"
+                    },
+                    {
+                        story: "The Jedi Temple's ancient door shows a sequence!",
+                        question: "What comes next? 1, 3, 5, ?",
+                        options: ["6", "7", "8", "9"],
+                        correct: 1,
+                        celebration: "🏛️ Amazing! The temple door opens!"
+                    },
+                    {
+                        story: "Obi-Wan's lightsaber crystal resonates with this pattern!",
+                        question: "What comes next? 5, 10, 15, ?",
+                        options: ["18", "20", "22", "25"],
+                        correct: 1,
+                        celebration: "⚔️ Perfect! The lightsaber glows brighter!"
+                    },
+                    {
+                        story: "The Force flows through this mysterious sequence!",
+                        question: "What comes next? 1, 4, 7, ?",
+                        options: ["9", "10", "11", "12"],
+                        correct: 1,
+                        celebration: "🌟 Incredible! You can feel the Force!"
+                    },
+                    {
+                        story: "The Death Star plans reveal a secret pattern!",
+                        question: "What comes next? 3, 6, 9, ?",
+                        options: ["11", "12", "13", "15"],
+                        correct: 1,
+                        celebration: "💫 Outstanding! The Death Star's weakness is revealed!"
+                    }
+                ]
+            }
+        };
+
+        const jediRanks = [
+            { rank: "Jedi Youngling", icon: "🎓", required: 0 },
+            { rank: "Jedi Padawan", icon: "⚔️", required: 5 },
+            { rank: "Jedi Knight", icon: "🛡️", required: 10 },
+            { rank: "Jedi Master", icon: "🌟", required: 15 },
+            { rank: "Jedi Grand Master", icon: "👑", required: 20 }
         ];
 
-        const sequences = [
-            [2, 4, 6, 8], [1, 3, 5, 7], [5, 10, 15, 20], [3, 6, 9, 12],
-            [1, 4, 7, 10], [2, 5, 8, 11], [10, 20, 30, 40], [1, 2, 4, 8]
-        ];
-
-        // Initialize audio system
-        function initAudio() {
-            try {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Resume audio context if it's suspended (browser autoplay policy)
-                if (audioContext.state === 'suspended') {
-                    audioContext.resume().then(() => {
-                        audioEnabled = true;
-                        startLightsaberHum();
-                        playStartupSound();
-                        console.log('Audio system initialized after resume');
-                    }).catch(error => {
-                        console.error('Failed to resume audio context:', error);
-                        audioEnabled = false;
-                    });
-                } else {
-                    audioEnabled = true;
-                    startLightsaberHum();
-                    playStartupSound();
-                    console.log('Audio system initialized successfully');
-                }
-            } catch (error) {
-                console.error('Audio not supported:', error);
-                audioEnabled = false;
-            }
+        // Initialize game
+        function initGame() {
+            createStars();
+            updateJediRank();
+            updatePlanetProgress();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showStory("🌟 Welcome, Young Jedi!", "Your journey begins now! Choose a planet to start your adventure and help save the galaxy. May the Force be with you!");
+            }, 1000);
         }
 
-        // Start continuous lightsaber hum
-        function startLightsaberHum() {
-            if (!audioEnabled) return;
-            
-            try {
-                // Create oscillator for the hum
-                lightsaberOscillator = audioContext.createOscillator();
-                lightsaberHumGain = audioContext.createGain();
-                
-                // Low frequency hum
-                lightsaberOscillator.frequency.setValueAtTime(80, audioContext.currentTime);
-                lightsaberOscillator.type = 'sawtooth';
-                
-                // Very quiet background hum
-                lightsaberHumGain.gain.setValueAtTime(0.03, audioContext.currentTime);
-                
-                // Connect and start
-                lightsaberOscillator.connect(lightsaberHumGain);
-                lightsaberHumGain.connect(audioContext.destination);
-                lightsaberOscillator.start();
-                
-                // Add slight vibrato
-                const vibrato = audioContext.createOscillator();
-                const vibratoGain = audioContext.createGain();
-                vibrato.frequency.setValueAtTime(6, audioContext.currentTime);
-                vibratoGain.gain.setValueAtTime(5, audioContext.currentTime);
-                vibrato.connect(vibratoGain);
-                vibratoGain.connect(lightsaberOscillator.frequency);
-                vibrato.start();
-            } catch (error) {
-                console.log('Lightsaber hum failed:', error);
-            }
-        }
-
-        // Play startup sound
-        function playStartupSound() {
-            if (!audioEnabled) return;
-            
-            const duration = 1.5;
-            const now = audioContext.currentTime;
-            
-            // Create oscillator for startup sound
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            
-            // Startup sweep from low to high
-            osc.frequency.setValueAtTime(200, now);
-            osc.frequency.exponentialRampToValueAtTime(800, now + duration);
-            osc.type = 'square';
-            
-            // Fade in and out
-            gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(0.1, now + 0.1);
-            gain.gain.linearRampToValueAtTime(0, now + duration);
-            
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            osc.start(now);
-            osc.stop(now + duration);
-        }
-
-        // Play Force lightning sound
-        function playLightningSound() {
-            if (!audioEnabled) return;
-            
-            const duration = 0.3;
-            const now = audioContext.currentTime;
-            
-            // Create noise for lightning
-            const bufferSize = audioContext.sampleRate * duration;
-            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-            const data = buffer.getChannelData(0);
-            
-            // Generate white noise
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = (Math.random() * 2 - 1) * 0.1;
-            }
-            
-            const noise = audioContext.createBufferSource();
-            noise.buffer = buffer;
-            
-            const filter = audioContext.createBiquadFilter();
-            filter.type = 'highpass';
-            filter.frequency.setValueAtTime(2000, now);
-            
-            const gain = audioContext.createGain();
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
-            
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioContext.destination);
-            noise.start(now);
-            noise.stop(now + duration);
-        }
-
-        // Play target hit sound
-        function playHitSound(type = 'normal') {
-            if (!audioEnabled) return;
-            
-            const duration = 0.4;
-            const now = audioContext.currentTime;
-            
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            
-            // Different pitches for different target types
-            let frequency = 440; // A note
-            if (type === 'math') frequency = 523; // C note
-            if (type === 'word') frequency = 659; // E note
-            if (type === 'sequence') frequency = 784; // G note
-            
-            osc.frequency.setValueAtTime(frequency, now);
-            osc.frequency.exponentialRampToValueAtTime(frequency * 1.5, now + 0.1);
-            osc.frequency.exponentialRampToValueAtTime(frequency, now + duration);
-            osc.type = 'triangle';
-            
-            gain.gain.setValueAtTime(0.15, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
-            
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            osc.start(now);
-            osc.stop(now + duration);
-        }
-
-        // Play achievement sound
-        function playAchievementSound() {
-            if (!audioEnabled) return;
-            
-            const now = audioContext.currentTime;
-            const notes = [523, 659, 784, 1047]; // C, E, G, C (major chord)
-            
-            notes.forEach((freq, index) => {
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                
-                osc.frequency.setValueAtTime(freq, now + index * 0.1);
-                osc.type = 'sine';
-                
-                gain.gain.setValueAtTime(0.1, now + index * 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + index * 0.1 + 0.5);
-                
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                osc.start(now + index * 0.1);
-                osc.stop(now + index * 0.1 + 0.5);
-            });
-        }
-
-        // Play whoosh sound for Force waves
-        function playWhooshSound() {
-            if (!audioEnabled) return;
-            
-            const duration = 0.6;
-            const now = audioContext.currentTime;
-            
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            const filter = audioContext.createBiquadFilter();
-            
-            osc.frequency.setValueAtTime(100, now);
-            osc.frequency.exponentialRampToValueAtTime(50, now + duration);
-            osc.type = 'sawtooth';
-            
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1000, now);
-            filter.frequency.exponentialRampToValueAtTime(200, now + duration);
-            
-            gain.gain.setValueAtTime(0.08, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
-            
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioContext.destination);
-            osc.start(now);
-            osc.stop(now + duration);
-        }
-
-        // Create star field
+        // Create animated stars
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 250; i++) {
+            const numStars = 100;
+            
+            for (let i = 0; i < numStars; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.left = Math.random() * 100 + '%';
@@ -964,72 +763,183 @@
             }
         }
 
-        // Update lightsaber position
-        function updateLightsaber(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+        // Planet selection
+        function selectPlanet(planetType) {
+            gameState.currentPlanet = planetType;
+            gameState.currentMission = 0;
             
-            const lightsaber = document.getElementById('lightsaber');
-            const hilt = document.getElementById('lightsaber-hilt');
-            
-            lightsaber.style.left = (mouseX - 4) + 'px';
-            lightsaber.style.top = (mouseY - 120) + 'px';
-            
-            hilt.style.left = (mouseX - 6) + 'px';
-            hilt.style.top = (mouseY - 15) + 'px';
-
-            // Check for target hits
-            checkTargetHits();
+            const planet = planetData[planetType];
+            showStory(`🚀 Destination: ${planet.name}`, planet.story, () => {
+                showMissionScreen();
+            });
         }
 
-        // Change lightsaber color
-        function changeLightsaberColor(color) {
-            lightsaberColor = color;
-            const lightsaber = document.getElementById('lightsaber');
-            lightsaber.className = `lightsaber ${color}`;
+        // Show mission screen
+        function showMissionScreen() {
+            document.getElementById('missionSelect').style.display = 'none';
+            document.getElementById('missionScreen').style.display = 'block';
             
-            // Play color change sound
-            if (audioEnabled) {
-                const now = audioContext.currentTime;
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
+            loadCurrentMission();
+        }
+
+        // Load current mission
+        function loadCurrentMission() {
+            const planet = planetData[gameState.currentPlanet];
+            const mission = planet.missions[gameState.currentMission];
+            
+            document.getElementById('currentPlanetName').textContent = planet.name;
+            document.getElementById('missionStory').textContent = mission.story;
+            document.getElementById('challengeQuestion').textContent = mission.question;
+            document.getElementById('missionProgressText').textContent = 
+                `Mission ${gameState.currentMission + 1} of ${planet.missions.length}`;
+            
+            // Create option buttons
+            const optionsContainer = document.getElementById('challengeOptions');
+            optionsContainer.innerHTML = '';
+            
+            mission.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Handle answer selection
+        function selectAnswer(selectedIndex) {
+            const planet = planetData[gameState.currentPlanet];
+            const mission = planet.missions[gameState.currentMission];
+            const buttons = document.querySelectorAll('.option-button');
+            
+            // Disable all buttons
+            buttons.forEach(button => button.style.pointerEvents = 'none');
+            
+            if (selectedIndex === mission.correct) {
+                // Correct answer
+                buttons[selectedIndex].classList.add('correct');
+                playSuccessSound();
                 
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.linearRampToValueAtTime(400, now + 0.2);
-                osc.type = 'sine';
+                setTimeout(() => {
+                    gameState.planetProgress[gameState.currentPlanet]++;
+                    updatePlanetProgress();
+                    updateJediRank();
+                    
+                    showAchievement(mission.celebration);
+                    
+                    setTimeout(() => {
+                        gameState.currentMission++;
+                        
+                        if (gameState.currentMission >= planet.missions.length) {
+                            // Planet completed!
+                            completePlanet();
+                        } else {
+                            // Next mission
+                            loadCurrentMission();
+                        }
+                    }, 2000);
+                }, 1000);
+            } else {
+                // Incorrect answer
+                buttons[selectedIndex].classList.add('incorrect');
+                buttons[mission.correct].classList.add('correct');
+                playErrorSound();
                 
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-                
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                osc.start(now);
-                osc.stop(now + 0.2);
+                setTimeout(() => {
+                    showAchievement("💪 Good try! Learn from mistakes, young Jedi!");
+                    setTimeout(() => {
+                        // Try again
+                        loadCurrentMission();
+                    }, 2000);
+                }, 1000);
+            }
+        }
+
+        // Complete planet
+        function completePlanet() {
+            const planet = planetData[gameState.currentPlanet];
+            const totalCompleted = Object.values(gameState.planetProgress).reduce((a, b) => a + b, 0);
+            
+            let completionMessage = `🎉 ${planet.name} Completed! 🎉\n\n`;
+            
+            if (totalCompleted >= 15) {
+                completionMessage += "🏆 INCREDIBLE! You've mastered all three planets! You are now a true Jedi Master! The galaxy is safe thanks to you!";
+            } else if (totalCompleted >= 10) {
+                completionMessage += "⚔️ Amazing progress! You're becoming a powerful Jedi! Try the other planets to continue your journey!";
+            } else {
+                completionMessage += "🌟 Excellent work! You've helped save this part of the galaxy! Ready for your next adventure?";
             }
             
-            // Add sound effect
-            createSoundEffect('🎨 Color changed!', mouseX, mouseY);
+            showStory("Mission Complete!", completionMessage, () => {
+                returnToMissionSelect();
+            });
         }
 
-        // Create sound effect text
-        function createSoundEffect(text, x, y) {
-            const effect = document.createElement('div');
-            effect.className = 'sound-effect';
-            effect.textContent = text;
-            effect.style.left = x + 'px';
-            effect.style.top = y + 'px';
-            effect.style.color = getRandomColor();
-            document.body.appendChild(effect);
+        // Return to mission select
+        function returnToMissionSelect() {
+            document.getElementById('missionScreen').style.display = 'none';
+            document.getElementById('missionSelect').style.display = 'block';
+            gameState.currentPlanet = null;
+        }
+
+        // Update planet progress
+        function updatePlanetProgress() {
+            Object.keys(gameState.planetProgress).forEach(planet => {
+                const progress = gameState.planetProgress[planet];
+                const maxMissions = planetData[planet].missions.length;
+                const percentage = (progress / maxMissions) * 100;
+                
+                document.getElementById(`${planet}Progress`).style.width = percentage + '%';
+                
+                let status;
+                if (progress === maxMissions) {
+                    status = "🏆 Planet Mastered!";
+                } else if (progress > 0) {
+                    status = `${progress}/${maxMissions} missions complete`;
+                } else {
+                    status = "Ready for Adventure!";
+                }
+                document.getElementById(`${planet}Status`).textContent = status;
+            });
+        }
+
+        // Update Jedi rank
+        function updateJediRank() {
+            const totalProgress = Object.values(gameState.planetProgress).reduce((a, b) => a + b, 0);
             
-            setTimeout(() => {
-                effect.remove();
-            }, 1000);
+            for (let i = jediRanks.length - 1; i >= 0; i--) {
+                if (totalProgress >= jediRanks[i].required) {
+                    if (gameState.jediRank !== i) {
+                        gameState.jediRank = i;
+                        const rank = jediRanks[i];
+                        document.getElementById('rankIcon').textContent = rank.icon;
+                        document.getElementById('rankText').textContent = rank.rank;
+                        
+                        if (i > 0) {
+                            showAchievement(`🎖️ Rank Up! You are now a ${rank.rank}!`);
+                        }
+                    }
+                    break;
+                }
+            }
         }
 
-        // Get random color
-        function getRandomColor() {
-            const colors = ['#ffe81f', '#4fc3f7', '#4ade80', '#ff4444', '#a855f7'];
-            return colors[Math.floor(Math.random() * colors.length)];
+        // Show story cutscene
+        function showStory(title, text, callback = null) {
+            document.getElementById('cutsceneTitle').textContent = title;
+            document.getElementById('cutsceneText').textContent = text;
+            document.getElementById('storyCutscene').style.display = 'flex';
+            
+            window.currentStoryCallback = callback;
+        }
+
+        // Close cutscene
+        function closeCutscene() {
+            document.getElementById('storyCutscene').style.display = 'none';
+            if (window.currentStoryCallback) {
+                window.currentStoryCallback();
+                window.currentStoryCallback = null;
+            }
         }
 
         // Show achievement
@@ -1040,498 +950,84 @@
             document.body.appendChild(achievement);
             
             setTimeout(() => {
-                achievement.remove();
-            }, 2000);
-        }
-
-        // Create Force lightning effect
-        function createForceLightning(x, y) {
-            const lightning = document.createElement('div');
-            lightning.className = 'force-lightning';
-            lightning.style.left = x + 'px';
-            lightning.style.top = y + 'px';
-            
-            for (let i = 0; i < 7; i++) {
-                const bolt = document.createElement('div');
-                bolt.className = 'lightning-bolt';
-                bolt.style.left = (Math.random() - 0.5) * 120 + 'px';
-                bolt.style.top = (Math.random() - 0.5) * 120 + 'px';
-                bolt.style.height = Math.random() * 100 + 30 + 'px';
-                bolt.style.transform = `rotate(${Math.random() * 360}deg)`;
-                lightning.appendChild(bolt);
-            }
-            
-            document.body.appendChild(lightning);
-            
-            setTimeout(() => {
-                lightning.remove();
-            }, 300);
-        }
-
-        // Create Force wave
-        function createForceWave(x, y) {
-            const wave = document.createElement('div');
-            wave.className = 'force-wave';
-            wave.style.left = (x - 15) + 'px';
-            wave.style.top = (y - 15) + 'px';
-            document.body.appendChild(wave);
-            
-            setTimeout(() => {
-                wave.remove();
-            }, 1200);
-        }
-
-        // Create sparks
-        function createSparks(x, y, count = 15) {
-            for (let i = 0; i < count; i++) {
-                const spark = document.createElement('div');
-                spark.className = 'spark';
-                spark.style.left = x + 'px';
-                spark.style.top = y + 'px';
-                
-                const angle = (Math.PI * 2 * i) / count;
-                const velocity = 60 + Math.random() * 60;
-                const vx = Math.cos(angle) * velocity;
-                const vy = Math.sin(angle) * velocity;
-                
-                document.body.appendChild(spark);
-                
-                let sparkX = x;
-                let sparkY = y;
-                let opacity = 1;
-                
-                function animateSpark() {
-                    sparkX += vx * 0.02;
-                    sparkY += vy * 0.02;
-                    opacity -= 0.015;
-                    
-                    spark.style.left = sparkX + 'px';
-                    spark.style.top = sparkY + 'px';
-                    spark.style.opacity = opacity;
-                    
-                    if (opacity > 0) {
-                        requestAnimationFrame(animateSpark);
-                    } else {
-                        spark.remove();
-                    }
+                if (achievement.parentNode) {
+                    achievement.remove();
                 }
-                
-                animateSpark();
-            }
-        }
-
-        // Create educational target
-        function createTarget() {
-            const target = document.createElement('div');
-            const targetType = Math.random();
-            
-            let targetData;
-            
-            if (targetType < 0.4) { // 40% math problems
-                targetData = createMathTarget(target);
-            } else if (targetType < 0.7) { // 30% vocabulary
-                targetData = createWordTarget(target);
-            } else { // 30% sequences
-                targetData = createSequenceTarget(target);
-            }
-            
-            target.style.left = Math.random() * (window.innerWidth - 80) + 'px';
-            target.style.top = Math.random() * (window.innerHeight - 80) + 'px';
-            
-            targetData.x = parseInt(target.style.left);
-            targetData.y = parseInt(target.style.top);
-            
-            targets.push(targetData);
-            document.body.appendChild(target);
-            
-            // Remove target after 10 seconds if not hit
-            setTimeout(() => {
-                if (!targetData.hit && target.parentNode) {
-                    target.remove();
-                    targets = targets.filter(t => t !== targetData);
-                }
-            }, 10000);
-        }
-
-        // Create math target
-        function createMathTarget(target) {
-            target.className = 'target math';
-            const difficulty = Math.random() < 0.6 ? 'easy' : 'hard'; // 60% easy for younger kids
-            const problemSet = mathProblems[difficulty];
-            const problem = problemSet[Math.floor(Math.random() * problemSet.length)];
-            
-            target.textContent = problem.question;
-            target.title = 'Math Problem: ' + problem.question;
-            
-            return {
-                element: target,
-                type: 'math',
-                problem: problem,
-                hit: false
-            };
-        }
-
-        // Create vocabulary target
-        function createWordTarget(target) {
-            target.className = 'target word';
-            const word = vocabularyWords[Math.floor(Math.random() * vocabularyWords.length)];
-            
-            target.textContent = word;
-            target.title = 'Vocabulary Word: ' + word;
-            
-            return {
-                element: target,
-                type: 'word',
-                word: word,
-                hit: false
-            };
-        }
-
-        // Create sequence target
-        function createSequenceTarget(target) {
-            target.className = 'target sequence';
-            const sequence = sequences[Math.floor(Math.random() * sequences.length)];
-            const displaySequence = sequence.slice(0, 3).join(',') + ',?';
-            
-            target.textContent = displaySequence;
-            target.title = 'Number Sequence: What comes next?';
-            
-            return {
-                element: target,
-                type: 'sequence',
-                sequence: sequence,
-                answer: sequence[3],
-                hit: false
-            };
-        }
-
-        // Check for target hits
-        function checkTargetHits() {
-            if (isPaused) return;
-            
-            targets.forEach((target, index) => {
-                if (target.hit) return;
-                
-                const distance = Math.sqrt(
-                    Math.pow(mouseX - (target.x + 40), 2) + 
-                    Math.pow(mouseY - (target.y + 40), 2)
-                );
-                
-                if (distance < 65) {
-                    target.hit = true;
-                    
-                    // Educational feedback based on target type
-                    handleEducationalHit(target);
-                    
-                    target.element.style.background = 'radial-gradient(circle, rgba(76,195,247,0.8) 0%, transparent 70%)';
-                    target.element.style.borderColor = '#4fc3f7';
-                    target.element.style.boxShadow = '0 0 30px #4fc3f7';
-                    
-                    createSparks(target.x + 40, target.y + 40, 20);
-                    score += 10;
-                    document.getElementById('score').textContent = score;
-                    
-                    // Show achievement for milestones
-                    if (score % 50 === 0) {
-                        showAchievement(achievements[Math.floor(Math.random() * achievements.length)]);
-                    }
-                    
-                    setTimeout(() => {
-                        if (target.element.parentNode) {
-                            target.element.remove();
-                        }
-                        targets.splice(index, 1);
-                    }, 1200);
-                }
-            });
-        }
-
-        // Handle educational content when target is hit
-        function handleEducationalHit(target) {
-            let message = '';
-            let learningType = '';
-            
-            if (target.type === 'math') {
-                mathProblemsCorrect++;
-                message = `🧮 Math: ${target.problem.question} = ${target.problem.answer}`;
-                learningType = '🧮 Great Math Skills!';
-                document.getElementById('mathCount').textContent = mathProblemsCorrect;
-                playHitSound('math');
-            } else if (target.type === 'word') {
-                wordsLearned++;
-                message = `📖 Word: "${target.word}" - You're building vocabulary!`;
-                learningType = '📖 Vocabulary Master!';
-                document.getElementById('wordCount').textContent = wordsLearned;
-                playHitSound('word');
-            } else if (target.type === 'sequence') {
-                sequencesCompleted++;
-                message = `🔢 Sequence: ${target.sequence.join(',')} - Answer: ${target.answer}`;
-                learningType = '🔢 Pattern Detective!';
-                document.getElementById('sequenceCount').textContent = sequencesCompleted;
-                playHitSound('sequence');
-            }
-            
-            // Show educational achievement
-            showLearningAchievement(learningType);
-            createSoundEffect(message.split(' - ')[0], target.x + 40, target.y - 20);
-            
-            // Update progress bar
-            const totalProgress = mathProblemsCorrect + wordsLearned + sequencesCompleted;
-            const progressPercent = Math.min((totalProgress / totalLearningGoal) * 100, 100);
-            document.getElementById('progressFill').style.width = progressPercent + '%';
-            
-            // Special achievement for completing learning goals
-            if (totalProgress === totalLearningGoal) {
-                showLearningAchievement('🎓 Young Jedi Scholar! Learning Complete!');
-                playAchievementSound();
-            } else if (totalProgress % 10 === 0) {
-                showLearningAchievement('📚 Learning Milestone Reached!');
-                playAchievementSound();
-            }
-        }
-
-        // Show learning achievement
-        function showLearningAchievement(text) {
-            const achievement = document.createElement('div');
-            achievement.className = 'learning-achievement';
-            achievement.textContent = text;
-            document.body.appendChild(achievement);
-            
-            setTimeout(() => {
-                achievement.remove();
             }, 3000);
         }
 
-        // Toggle audio system
+        // Audio functions
         function toggleAudio() {
+            // Implementation similar to before but simplified
             const audioBtn = document.getElementById('audioBtn');
             const audioIcon = document.getElementById('audioIcon');
-            const audioText = document.getElementById('audioText');
             
-            if (!audioEnabled) {
+            if (!gameState.audioEnabled) {
                 try {
-                    initAudio();
-                    if (audioEnabled) {
-                        audioIcon.textContent = '🔊';
-                        audioText.textContent = 'Audio On';
-                        audioBtn.style.background = 'linear-gradient(45deg, #4ade80, #22c55e)';
-                        audioBtn.style.borderColor = '#4ade80';
-                        
-                        // Show confirmation
-                        createSoundEffect('🔊 Audio Enabled!', window.innerWidth / 2, 100);
-                        console.log('Audio successfully enabled');
-                    } else {
-                        // Audio failed to initialize
-                        audioIcon.textContent = '🔇';
-                        audioText.textContent = 'Audio Failed';
-                        createSoundEffect('❌ Audio Not Available', window.innerWidth / 2, 100);
-                        console.log('Audio failed to initialize');
-                    }
+                    gameState.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    gameState.audioEnabled = true;
+                    audioIcon.textContent = '🔊';
+                    showAchievement('🔊 Audio Enabled!');
                 } catch (error) {
-                    console.error('Audio toggle error:', error);
                     audioIcon.textContent = '🔇';
-                    audioText.textContent = 'Audio Error';
-                    createSoundEffect('❌ Audio Error', window.innerWidth / 2, 100);
+                    showAchievement('❌ Audio Not Available');
                 }
             } else {
-                // Stop lightsaber hum
-                if (lightsaberOscillator) {
-                    try {
-                        lightsaberOscillator.stop();
-                    } catch (e) {
-                        console.log('Error stopping oscillator:', e);
-                    }
-                    lightsaberOscillator = null;
+                if (gameState.audioContext) {
+                    gameState.audioContext.close();
+                    gameState.audioContext = null;
                 }
-                if (lightsaberHumGain) {
-                    lightsaberHumGain = null;
-                }
-                if (audioContext) {
-                    try {
-                        audioContext.close();
-                    } catch (e) {
-                        console.log('Error closing audio context:', e);
-                    }
-                    audioContext = null;
-                }
-                audioEnabled = false;
+                gameState.audioEnabled = false;
                 audioIcon.textContent = '🔇';
-                audioText.textContent = 'Enable Audio';
-                audioBtn.style.background = 'linear-gradient(45deg, #4fc3f7, #2563eb)';
-                audioBtn.style.borderColor = '#4fc3f7';
-                
-                createSoundEffect('🔇 Audio Disabled', window.innerWidth / 2, 100);
-                console.log('Audio disabled');
+                showAchievement('🔇 Audio Disabled');
             }
         }
 
-        // Toggle pause function
-        function togglePause() {
-            isPaused = !isPaused;
-            const pauseOverlay = document.getElementById('pauseOverlay');
-            const pauseBtn = document.getElementById('pauseBtn');
-            const pauseIcon = document.getElementById('pauseIcon');
-            const pauseText = document.getElementById('pauseText');
+        function playSuccessSound() {
+            if (!gameState.audioEnabled || !gameState.audioContext) return;
             
-            if (isPaused) {
-                pauseOverlay.style.display = 'flex';
-                pauseBtn.classList.add('paused');
-                pauseIcon.textContent = '▶️';
-                pauseText.textContent = 'Resume';
+            try {
+                const osc = gameState.audioContext.createOscillator();
+                const gain = gameState.audioContext.createGain();
                 
-                // Pause all targets
-                targets.forEach(target => {
-                    if (target.element.style.animationPlayState !== 'paused') {
-                        target.element.style.animationPlayState = 'paused';
-                    }
-                });
+                osc.frequency.setValueAtTime(523, gameState.audioContext.currentTime); // C note
+                osc.frequency.exponentialRampToValueAtTime(659, gameState.audioContext.currentTime + 0.2); // E note
                 
-                // Pause floating elements
-                const floatingElements = document.querySelectorAll('.floating-element');
-                floatingElements.forEach(element => {
-                    element.style.animationPlayState = 'paused';
-                });
+                gain.gain.setValueAtTime(0.1, gameState.audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, gameState.audioContext.currentTime + 0.3);
                 
-                // Pause stars
-                const stars = document.querySelectorAll('.star');
-                stars.forEach(star => {
-                    star.style.animationPlayState = 'paused';
-                });
-                
-            } else {
-                pauseOverlay.style.display = 'none';
-                pauseBtn.classList.remove('paused');
-                pauseIcon.textContent = '⏸️';
-                pauseText.textContent = 'Pause';
-                
-                // Resume all targets
-                targets.forEach(target => {
-                    target.element.style.animationPlayState = 'running';
-                });
-                
-                // Resume floating elements
-                const floatingElements = document.querySelectorAll('.floating-element');
-                floatingElements.forEach(element => {
-                    element.style.animationPlayState = 'running';
-                });
-                
-                // Resume stars
-                const stars = document.querySelectorAll('.star');
-                stars.forEach(star => {
-                    star.style.animationPlayState = 'running';
-                });
+                osc.connect(gain);
+                gain.connect(gameState.audioContext.destination);
+                osc.start();
+                osc.stop(gameState.audioContext.currentTime + 0.3);
+            } catch (error) {
+                console.log('Audio error:', error);
             }
         }
 
-        // Restart game function
-        function restartGame() {
-            // Reset score
-            score = 0;
-            document.getElementById('score').textContent = score;
+        function playErrorSound() {
+            if (!gameState.audioEnabled || !gameState.audioContext) return;
             
-            // Reset educational progress
-            mathProblemsCorrect = 0;
-            wordsLearned = 0;
-            sequencesCompleted = 0;
-            document.getElementById('mathCount').textContent = mathProblemsCorrect;
-            document.getElementById('wordCount').textContent = wordsLearned;
-            document.getElementById('sequenceCount').textContent = sequencesCompleted;
-            document.getElementById('progressFill').style.width = '0%';
-            
-            // Remove all targets
-            targets.forEach(target => {
-                if (target.element.parentNode) {
-                    target.element.remove();
-                }
-            });
-            targets = [];
-            
-            // Remove any active effects
-            const effects = document.querySelectorAll('.spark, .force-wave, .force-lightning, .sound-effect, .achievement, .learning-achievement');
-            effects.forEach(effect => {
-                if (effect.parentNode) {
-                    effect.remove();
-                }
-            });
-            
-            // If paused, resume the game
-            if (isPaused) {
-                togglePause();
-            }
-            
-            // Restart target generation
-            clearInterval(targetInterval);
-            startTargetGeneration();
-            
-            // Show restart message
-            createSoundEffect('🚀 Game Restarted!', window.innerWidth / 2, window.innerHeight / 2);
-            showLearningAchievement('🎮 New Learning Adventure Begins!');
-        }
-
-        // Start target generation
-        function startTargetGeneration() {
-            // Create targets periodically - more frequently for better learning experience
-            targetInterval = setInterval(() => {
-                if (!isPaused && targets.length < 5) {  // Allow one more target
-                    createTarget();
-                }
-            }, 2500);  // Create targets every 2.5 seconds instead of 3
-            
-            // Create initial targets
-            if (!isPaused) {
-                setTimeout(() => { if (!isPaused) createTarget(); }, 500);  // First target sooner
-                setTimeout(() => { if (!isPaused) createTarget(); }, 1500);
-                setTimeout(() => { if (!isPaused) createTarget(); }, 2500);
+            try {
+                const osc = gameState.audioContext.createOscillator();
+                const gain = gameState.audioContext.createGain();
+                
+                osc.frequency.setValueAtTime(200, gameState.audioContext.currentTime);
+                
+                gain.gain.setValueAtTime(0.1, gameState.audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, gameState.audioContext.currentTime + 0.2);
+                
+                osc.connect(gain);
+                gain.connect(gameState.audioContext.destination);
+                osc.start();
+                osc.stop(gameState.audioContext.currentTime + 0.2);
+            } catch (error) {
+                console.log('Audio error:', error);
             }
         }
 
-        // Event listeners
-        document.addEventListener('mousemove', updateLightsaber);
-
-        document.addEventListener('click', (e) => {
-            if (isPaused) return;
-            
-            createForceLightning(e.clientX, e.clientY);
-            createForceWave(e.clientX, e.clientY);
-            createSparks(e.clientX, e.clientY, 12);
-            
-            // Play Force power sounds
-            playLightningSound();
-            playWhooshSound();
-            
-            // Random sound effect
-            const randomEffect = soundEffects[Math.floor(Math.random() * soundEffects.length)];
-            createSoundEffect(randomEffect, e.clientX, e.clientY);
-        });
-
-        // Keyboard controls
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' || e.key === ' ') {
-                e.preventDefault();
-                togglePause();
-            }
-        });
-
-        // Initialize
-        createStars();
-        startTargetGeneration();
-        gameStarted = true;
-        
-        // Show initial educational guidance
-        setTimeout(() => {
-            showLearningAchievement('🎓 Welcome to Jedi Academy! Hit colorful targets to learn!');
-        }, 2000);
-        
-        setTimeout(() => {
-            createSoundEffect('🧮 BLUE = Math • 📖 GREEN = Words • 🔢 PURPLE = Sequences', window.innerWidth / 2, window.innerHeight - 100);
-        }, 4000);
-        
-        // Show audio reminder if not enabled after 5 seconds
-        setTimeout(() => {
-            if (!audioEnabled) {
-                createSoundEffect('🔊 Click "Enable Audio" for sounds!', window.innerWidth / 2, 150);
-            }
-        }, 6000);
+        // Initialize the game when page loads
+        initGame();
     </script>
 </body>
 </html> 
