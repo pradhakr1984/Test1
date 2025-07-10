@@ -17,6 +17,48 @@
             color: #fff;
             overflow-x: hidden;
             min-height: 100vh;
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Lightsaber cursor */
+        .lightsaber-cursor {
+            position: fixed;
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(to top, 
+                transparent 0%, 
+                #4fc3f7 20%, 
+                #ffffff 50%, 
+                #4fc3f7 80%, 
+                transparent 100%);
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 9999;
+            transform-origin: bottom center;
+            box-shadow: 0 0 20px #4fc3f7, 0 0 40px #4fc3f7;
+            animation: lightsaberGlow 2s ease-in-out infinite alternate;
+        }
+
+        .lightsaber-hilt {
+            position: fixed;
+            width: 8px;
+            height: 20px;
+            background: linear-gradient(to bottom, #666, #333, #666);
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 9998;
+            border: 1px solid #999;
+        }
+
+        @keyframes lightsaberGlow {
+            0% { 
+                box-shadow: 0 0 20px #4fc3f7, 0 0 40px #4fc3f7;
+                opacity: 0.8;
+            }
+            100% { 
+                box-shadow: 0 0 30px #4fc3f7, 0 0 60px #4fc3f7, 0 0 80px #4fc3f7;
+                opacity: 1;
+            }
         }
 
         /* Animated stars background */
@@ -217,28 +259,128 @@
             margin-bottom: 30px;
         }
 
-        .planet-card {
-            background: linear-gradient(135deg, rgba(255, 232, 31, 0.1), rgba(79, 195, 247, 0.1));
-            border: 3px solid #ffe81f;
-            border-radius: 20px;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            animation: planetFloat 6s ease-in-out infinite;
-        }
+                 .planet-card {
+             background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(10,10,46,0.9));
+             border: 3px solid #ffe81f;
+             border-radius: 20px;
+             padding: 30px;
+             cursor: none;
+             transition: all 0.3s ease;
+             text-align: center;
+             position: relative;
+             overflow: hidden;
+         }
 
-        .planet-card:hover {
-            transform: scale(1.05) translateY(-10px);
-            border-color: #4fc3f7;
-            box-shadow: 0 0 30px rgba(79, 195, 247, 0.5);
-        }
+         .planet-card:hover {
+             transform: scale(1.05);
+             border-color: #4fc3f7;
+             box-shadow: 0 0 30px rgba(79, 195, 247, 0.5);
+         }
 
-        .planet-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            display: block;
-        }
+         .planet-visual {
+             width: 120px;
+             height: 120px;
+             margin: 0 auto 20px;
+             position: relative;
+             border-radius: 50%;
+             overflow: hidden;
+         }
+
+         /* Math Planet - Desert with rocks */
+         .planet-math {
+             background: radial-gradient(circle at 30% 30%, #d4a574 0%, #8b4513 100%);
+             box-shadow: inset -20px -20px 40px rgba(0,0,0,0.3);
+         }
+
+         .planet-math::before {
+             content: '';
+             position: absolute;
+             width: 15px;
+             height: 8px;
+             background: #654321;
+             border-radius: 50%;
+             top: 40%;
+             left: 30%;
+         }
+
+         .planet-math::after {
+             content: '';
+             position: absolute;
+             width: 10px;
+             height: 6px;
+             background: #4a3c1f;
+             border-radius: 50%;
+             top: 60%;
+             right: 25%;
+         }
+
+         /* Words Planet - Ocean with continents */
+         .planet-words {
+             background: radial-gradient(circle at 40% 40%, #4fc3f7 0%, #0369a1 100%);
+             box-shadow: inset -20px -20px 40px rgba(0,0,0,0.3);
+         }
+
+         .planet-words::before {
+             content: '';
+             position: absolute;
+             width: 25px;
+             height: 20px;
+             background: #22c55e;
+             border-radius: 40% 60% 30% 70%;
+             top: 30%;
+             left: 20%;
+         }
+
+         .planet-words::after {
+             content: '';
+             position: absolute;
+             width: 18px;
+             height: 15px;
+             background: #16a34a;
+             border-radius: 50% 30% 70% 40%;
+             bottom: 25%;
+             right: 30%;
+         }
+
+         /* Logic Planet - Purple with rings */
+         .planet-logic {
+             background: radial-gradient(circle at 35% 35%, #a855f7 0%, #581c87 100%);
+             box-shadow: inset -20px -20px 40px rgba(0,0,0,0.3);
+         }
+
+         .planet-logic::before {
+             content: '';
+             position: absolute;
+             width: 140px;
+             height: 2px;
+             background: linear-gradient(90deg, transparent, #e879f9, transparent);
+             top: 50%;
+             left: -10px;
+             transform: rotate(-15deg);
+         }
+
+         .planet-logic::after {
+             content: '';
+             position: absolute;
+             width: 140px;
+             height: 1px;
+             background: linear-gradient(90deg, transparent, #c084fc, transparent);
+             top: 45%;
+             left: -10px;
+             transform: rotate(-15deg);
+         }
+
+         .planet-icon {
+             font-size: 2rem;
+             margin-bottom: 10px;
+             display: block;
+             position: absolute;
+             top: -5px;
+             right: -5px;
+             background: rgba(0,0,0,0.7);
+             padding: 5px;
+             border-radius: 50%;
+         }
 
         .planet-name {
             font-size: 1.8rem;
@@ -272,10 +414,7 @@
             font-size: 0.9rem;
         }
 
-        @keyframes planetFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-5px) rotate(2deg); }
-        }
+
 
         /* Mission Screen */
         .mission-screen {
@@ -380,29 +519,42 @@
             font-weight: bold;
         }
 
-        /* Control buttons */
-        .controls {
-            text-align: center;
-            margin-top: 20px;
-        }
+                 /* Control buttons */
+         .controls {
+             text-align: center;
+             margin-top: 20px;
+         }
 
-        .control-button {
-            background: linear-gradient(45deg, #4fc3f7, #2196f3);
-            color: #000;
-            border: none;
-            padding: 15px 25px;
-            margin: 10px;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+         .control-button {
+             background: linear-gradient(45deg, #4fc3f7, #2196f3);
+             color: #000;
+             border: none;
+             padding: 15px 25px;
+             margin: 10px;
+             border-radius: 25px;
+             font-size: 1rem;
+             font-weight: bold;
+             cursor: none; /* Use lightsaber cursor */
+             transition: all 0.3s ease;
+         }
 
-        .control-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(79, 195, 247, 0.6);
-        }
+         .control-button:hover {
+             transform: scale(1.1);
+             box-shadow: 0 0 20px rgba(79, 195, 247, 0.6);
+         }
+
+         /* Lightsaber color variants for different elements */
+         .player-card:hover ~ .lightsaber-cursor,
+         .planet-card:hover ~ .lightsaber-cursor,
+         .option-button:hover ~ .lightsaber-cursor {
+             background: linear-gradient(to top, 
+                 transparent 0%, 
+                 #ffe81f 20%, 
+                 #ffffff 50%, 
+                 #ffe81f 80%, 
+                 transparent 100%) !important;
+             box-shadow: 0 0 20px #ffe81f, 0 0 40px #ffe81f !important;
+         }
 
         /* Story cutscene */
         .story-cutscene {
@@ -491,6 +643,21 @@
 <body>
     <div class="stars-container" id="stars"></div>
     
+    <!-- Lightsaber cursor -->
+    <div class="lightsaber-cursor" id="lightsaberBlade"></div>
+    <div class="lightsaber-hilt" id="lightsaberHilt"></div>
+    
+    <!-- Lightsaber Sound Effects -->
+    <audio id="lightsaberActivate" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEbBjmI0+e9diMFl/zH8N2QQAoUXrTp66hVFApGn+DyvmEbBjmI0+e9diMFl" type="audio/wav">
+    </audio>
+    <audio id="lightsaberHum" preload="auto" loop>
+        <source src="data:audio/wav;base64,UklGRnAAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YU4AAABhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ==" type="audio/wav">
+    </audio>
+    <audio id="lightsaberSwing" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEbBjmI0+e9diMFl" type="audio/wav">
+    </audio>
+    
     <div class="game-container">
         <div class="game-header">
             <div class="nav-buttons">
@@ -537,7 +704,9 @@
                 
                 <div class="planets-grid">
                     <div class="planet-card" onclick="selectPlanet('math')">
-                        <span class="planet-icon">🪐</span>
+                        <div class="planet-visual planet-math">
+                            <div class="planet-icon">🧮</div>
+                        </div>
                         <div class="planet-name">Calculon Prime</div>
                         <div class="planet-description">
                             Math challenges await! Help solve calculations to save the galaxy.
@@ -549,7 +718,9 @@
                     </div>
 
                     <div class="planet-card" onclick="selectPlanet('words')">
-                        <span class="planet-icon">🌍</span>
+                        <div class="planet-visual planet-words">
+                            <div class="planet-icon">📚</div>
+                        </div>
                         <div class="planet-name">Vocabularis</div>
                         <div class="planet-description">
                             Decode secret messages! Learn powerful words to help the Rebellion.
@@ -561,7 +732,9 @@
                     </div>
 
                     <div class="planet-card" onclick="selectPlanet('logic')">
-                        <span class="planet-icon">🔮</span>
+                        <div class="planet-visual planet-logic">
+                            <div class="planet-icon">🧩</div>
+                        </div>
                         <div class="planet-name">Pattern Nexus</div>
                         <div class="planet-description">
                             Solve ancient patterns! Unlock hidden Force powers and wisdom.
@@ -753,49 +926,49 @@
             }
         };
 
-        // Mission data for Sidd (9-year-old, advanced level)
-        const siddMissions = {
-            math: {
-                name: "Calculon Prime",
-                story: "Commander Sidd! The Death Star's quantum computers need advanced calculations!",
-                missions: [
-                    {
-                        story: "The hyperdrive needs complex multiplication!",
-                        question: "What is 47 × 23?",
-                        options: ["1081", "1171", "1061", "1051"],
-                        correct: 0,
-                        celebration: "🚀 Incredible! Advanced math mastered!"
-                    },
-                    {
-                        story: "Power core requires division calculations!",
-                        question: "What is 2484 ÷ 12?",
-                        options: ["207", "197", "217", "187"],
-                        correct: 0,
-                        celebration: "⚡ Amazing! Core stabilized!"
-                    },
-                    {
-                        story: "Calculate escape velocity with fractions!",
-                        question: "What is 3/4 + 2/8?",
-                        options: ["5/12", "1", "5/8", "7/8"],
-                        correct: 1,
-                        celebration: "🛸 Perfect! Ships can escape!"
-                    },
-                    {
-                        story: "X-wing squadron needs fuel percentages!",
-                        question: "What is 35% of 240?",
-                        options: ["84", "74", "94", "64"],
-                        correct: 0,
-                        celebration: "✈️ Excellent! All fighters fueled!"
-                    },
-                    {
-                        story: "Calculate coordinates using decimals!",
-                        question: "What is 15.7 × 4.2?",
-                        options: ["65.94", "66.94", "64.94", "67.94"],
-                        correct: 0,
-                        celebration: "🌟 Outstanding! Base located!"
-                    }
-                ]
-            },
+                 // Mission data for Sidd (9-year-old, 4th grade level)
+         const siddMissions = {
+             math: {
+                 name: "Calculon Prime",
+                 story: "Commander Sidd! The Death Star's computers need 4th grade math skills to save the galaxy!",
+                 missions: [
+                     {
+                         story: "The hyperdrive needs multiplication calculations!",
+                         question: "What is 24 × 15?",
+                         options: ["350", "360", "370", "340"],
+                         correct: 1,
+                         celebration: "🚀 Excellent! Math skills mastered!"
+                     },
+                     {
+                         story: "Power core requires division calculations!",
+                         question: "What is 144 ÷ 12?",
+                         options: ["11", "12", "13", "14"],
+                         correct: 1,
+                         celebration: "⚡ Amazing! Core stabilized!"
+                     },
+                     {
+                         story: "Calculate fuel using simple fractions!",
+                         question: "What is 1/2 + 1/4?",
+                         options: ["2/6", "3/4", "1/6", "2/4"],
+                         correct: 1,
+                         celebration: "🛸 Perfect! Ships can escape!"
+                     },
+                     {
+                         story: "X-wing squadron needs basic area calculations!",
+                         question: "What is the area of a rectangle 6 × 8?",
+                         options: ["42", "48", "54", "46"],
+                         correct: 1,
+                         celebration: "✈️ Excellent! All fighters ready!"
+                     },
+                     {
+                         story: "Calculate distance using larger numbers!",
+                         question: "What is 1,256 + 2,344?",
+                         options: ["3,600", "3,500", "3,700", "3,560"],
+                         correct: 0,
+                         celebration: "🌟 Outstanding! Base located!"
+                     }
+                 ]
+             },
             words: {
                 name: "Vocabularis",
                 story: "Master Sidd! Decode advanced diplomatic messages with expanded vocabulary!",
@@ -1118,14 +1291,180 @@
             }, 3000);
         }
 
-        // Initialize game
-        function initGame() {
-            createStars();
-            console.log('Jedi Space Academy initialized');
-        }
+                 // Lightsaber cursor functionality
+         let mouseX = 0;
+         let mouseY = 0;
+         let isLightsaberActive = false;
+         let audioContext;
+         let humOscillator;
+         
+         // Initialize audio context
+         function initAudio() {
+             if (!audioContext) {
+                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
+             }
+         }
+         
+         // Create lightsaber hum sound
+         function startHum() {
+             if (!audioContext) return;
+             
+             if (humOscillator) {
+                 humOscillator.stop();
+             }
+             
+             humOscillator = audioContext.createOscillator();
+             const gainNode = audioContext.createGain();
+             
+             humOscillator.type = 'sawtooth';
+             humOscillator.frequency.value = 150; // Deep hum
+             gainNode.gain.value = 0.1; // Low volume
+             
+             humOscillator.connect(gainNode);
+             gainNode.connect(audioContext.destination);
+             
+             humOscillator.start();
+         }
+         
+         // Stop lightsaber hum
+         function stopHum() {
+             if (humOscillator) {
+                 humOscillator.stop();
+                 humOscillator = null;
+             }
+         }
+         
+         // Create lightsaber activation sound
+         function playActivationSound() {
+             if (!audioContext) return;
+             
+             const oscillator = audioContext.createOscillator();
+             const gainNode = audioContext.createGain();
+             
+             oscillator.type = 'sine';
+             oscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+             oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.3);
+             
+             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+             gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.1);
+             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+             
+             oscillator.connect(gainNode);
+             gainNode.connect(audioContext.destination);
+             
+             oscillator.start();
+             oscillator.stop(audioContext.currentTime + 0.3);
+         }
+         
+         // Create lightsaber swing sound
+         function playSwingSound() {
+             if (!audioContext) return;
+             
+             const oscillator = audioContext.createOscillator();
+             const gainNode = audioContext.createGain();
+             
+             oscillator.type = 'sawtooth';
+             oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+             oscillator.frequency.linearRampToValueAtTime(100, audioContext.currentTime + 0.2);
+             
+             gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+             
+             oscillator.connect(gainNode);
+             gainNode.connect(audioContext.destination);
+             
+             oscillator.start();
+             oscillator.stop(audioContext.currentTime + 0.2);
+         }
+         
+         function updateLightsaber() {
+             const blade = document.getElementById('lightsaberBlade');
+             const hilt = document.getElementById('lightsaberHilt');
+             
+             // Position the hilt at mouse location
+             hilt.style.left = (mouseX - 4) + 'px';
+             hilt.style.top = (mouseY + 10) + 'px';
+             
+             // Position the blade above the hilt
+             blade.style.left = (mouseX - 2) + 'px';
+             blade.style.top = (mouseY - 70) + 'px';
+         }
+         
+         // Track mouse movement
+         document.addEventListener('mousemove', (e) => {
+             mouseX = e.clientX;
+             mouseY = e.clientY;
+             updateLightsaber();
+             
+             // Check if hovering over interactive elements
+             const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
+             const blade = document.getElementById('lightsaberBlade');
+             
+             if (elementUnderMouse && (
+                 elementUnderMouse.classList.contains('player-card') ||
+                 elementUnderMouse.classList.contains('planet-card') ||
+                 elementUnderMouse.classList.contains('option-button') ||
+                 elementUnderMouse.classList.contains('control-button') ||
+                 elementUnderMouse.classList.contains('nav-btn') ||
+                 elementUnderMouse.classList.contains('back-button') ||
+                 elementUnderMouse.classList.contains('cutscene-button')
+             )) {
+                 // Change to yellow lightsaber for interactive elements
+                 blade.style.background = 'linear-gradient(to top, transparent 0%, #ffe81f 20%, #ffffff 50%, #ffe81f 80%, transparent 100%)';
+                 blade.style.boxShadow = '0 0 20px #ffe81f, 0 0 40px #ffe81f';
+             } else {
+                 // Default blue lightsaber
+                 blade.style.background = 'linear-gradient(to top, transparent 0%, #4fc3f7 20%, #ffffff 50%, #4fc3f7 80%, transparent 100%)';
+                 blade.style.boxShadow = '0 0 20px #4fc3f7, 0 0 40px #4fc3f7';
+             }
+         });
+         
+         // Color change and sound on click
+         document.addEventListener('mousedown', (e) => {
+             initAudio(); // Initialize audio on first user interaction
+             
+             const blade = document.getElementById('lightsaberBlade');
+             blade.style.background = 'linear-gradient(to top, transparent 0%, #22c55e 20%, #ffffff 50%, #22c55e 80%, transparent 100%)';
+             blade.style.boxShadow = '0 0 20px #22c55e, 0 0 40px #22c55e';
+             
+             // Play swing sound on click
+             playSwingSound();
+             
+             // If clicking on an interactive element, also play activation sound
+             const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
+             if (elementUnderMouse && (
+                 elementUnderMouse.classList.contains('player-card') ||
+                 elementUnderMouse.classList.contains('planet-card') ||
+                 elementUnderMouse.classList.contains('option-button') ||
+                 elementUnderMouse.classList.contains('control-button') ||
+                 elementUnderMouse.classList.contains('nav-btn') ||
+                 elementUnderMouse.classList.contains('back-button') ||
+                 elementUnderMouse.classList.contains('cutscene-button')
+             )) {
+                 setTimeout(() => playActivationSound(), 100);
+             }
+         });
+         
+         document.addEventListener('mouseup', () => {
+             const blade = document.getElementById('lightsaberBlade');
+             blade.style.background = 'linear-gradient(to top, transparent 0%, #4fc3f7 20%, #ffffff 50%, #4fc3f7 80%, transparent 100%)';
+             blade.style.boxShadow = '0 0 20px #4fc3f7, 0 0 40px #4fc3f7';
+         });
 
-        // Start the game when page loads
-        window.addEventListener('load', initGame);
+         // Initialize game
+         function initGame() {
+             createStars();
+             updateLightsaber(); // Initialize lightsaber position
+             
+             // Add audio initialization on page interaction
+             document.addEventListener('click', initAudio, { once: true });
+             document.addEventListener('keydown', initAudio, { once: true });
+             
+             console.log('Jedi Space Academy initialized - click anywhere to enable lightsaber sounds!');
+         }
+
+         // Start the game when page loads
+         window.addEventListener('load', initGame);
     </script>
 </body>
 </html> 
