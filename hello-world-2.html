@@ -137,6 +137,94 @@
             padding: 100px 20px 20px;
         }
 
+        /* Player Selection Screen */
+        .player-select {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 2rem;
+        }
+
+        .player-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(10,10,46,0.9));
+            border: 3px solid #ffe81f;
+            border-radius: 25px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(255, 232, 31, 0.4);
+            animation: playerFloat 4s ease-in-out infinite;
+        }
+
+        .player-card:hover {
+            transform: scale(1.05) translateY(-10px);
+            border-color: #4fc3f7;
+            box-shadow: 0 0 40px rgba(79, 195, 247, 0.6);
+        }
+
+        .player-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: playerSpin 6s linear infinite;
+        }
+
+        .player-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffe81f;
+            margin-bottom: 8px;
+            text-shadow: 0 0 15px #ffe81f;
+        }
+
+        .player-age {
+            font-size: 1.2rem;
+            color: #4fc3f7;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .player-description {
+            color: #ccc;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-badge {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            display: inline-block;
+        }
+
+        .difficulty-badge.easy {
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            color: #000;
+        }
+
+        .difficulty-badge.advanced {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: #000;
+        }
+
+        @keyframes playerFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes playerSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Mission Selection Screen */
         .mission-select {
             text-align: center;
@@ -495,13 +583,44 @@
                     <span id="audioIcon">🔊</span>
                     <span id="audioText">Audio</span>
                 </button>
+                <button class="control-button" id="playerBtn" onclick="returnToPlayerSelect()" style="display: none;">
+                    👥 Change Player
+                </button>
             </div>
         </div>
 
         <!-- Main content -->
         <div class="main-content">
+            <!-- Player Selection Screen -->
+            <div class="player-select" id="playerSelect">
+                <h1 class="mission-title">🚀 Choose Your Jedi 🚀</h1>
+                <p class="mission-subtitle">Which young Jedi will be training today?</p>
+                
+                <div class="players-grid">
+                    <div class="player-card" onclick="selectPlayer('jai')">
+                        <span class="player-icon">👶</span>
+                        <div class="player-name">Jedi Jai</div>
+                        <div class="player-age">6 Years Old</div>
+                        <div class="player-description">
+                            Perfect for beginners! Easy math, simple words, and fun patterns.
+                        </div>
+                        <div class="difficulty-badge easy">⭐ Youngling Level</div>
+                    </div>
+
+                    <div class="player-card" onclick="selectPlayer('sidd')">
+                        <span class="player-icon">🧑</span>
+                        <div class="player-name">Jedi Sidd</div>
+                        <div class="player-age">9 Years Old</div>
+                        <div class="player-description">
+                            Advanced challenges! Complex math, bigger words, and tricky logic puzzles.
+                        </div>
+                        <div class="difficulty-badge advanced">⭐⭐⭐ Knight Level</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Mission Selection Screen -->
-            <div class="mission-select" id="missionSelect">
+            <div class="mission-select" id="missionSelect" style="display: none;">
                 <h1 class="mission-title">🚀 Jedi Space Academy 🚀</h1>
                 <p class="mission-subtitle">Choose your adventure, young Jedi! Each planet has unique challenges to master.</p>
                 
@@ -585,6 +704,7 @@
     <script>
         // Game state
         let gameState = {
+            currentPlayer: null, // 'jai' or 'sidd'
             currentPlanet: null,
             currentMission: 0,
             planetProgress: {
@@ -597,13 +717,23 @@
             audioContext: null
         };
 
-        // Mission data
-        const planetData = {
-            math: {
-                name: "Calculon Prime",
-                icon: "🪐",
-                story: "R2-D2 needs your help! The Death Star's computers are malfunctioning. Use your math skills to restore power and save the galaxy!",
-                missions: [
+        // Mission data - will be dynamically selected based on player
+        const getMissionData = (player) => {
+            if (player === 'sidd') {
+                return getSiddMissions(); // Advanced 5th grade
+            } else {
+                return getJaiMissions(); // Easy 1st grade
+            }
+        };
+
+        // Jai's missions (6-year-old, 1st grade level)
+        function getJaiMissions() {
+            return {
+                math: {
+                    name: "Calculon Prime",
+                    icon: "🪐",
+                    story: "R2-D2 needs your help! The Death Star's computers are malfunctioning. Use your math skills to restore power and save the galaxy!",
+                    missions: [
                     {
                         story: "R2-D2 beeps frantically! The hyperdrive calculations are wrong!",
                         question: "What is 3 + 4?",
@@ -724,8 +854,143 @@
                         celebration: "💫 Outstanding! The Death Star's weakness is revealed!"
                     }
                 ]
-            }
-        };
+            };
+        }
+
+        // Sidd's missions (9-year-old, 5th grade level)
+        function getSiddMissions() {
+            return {
+                math: {
+                    name: "Calculon Prime",
+                    icon: "🪐",
+                    story: "Commander Sidd! The Death Star's quantum computers need advanced calculations. Use your 5th-grade math skills to save the galaxy!",
+                    missions: [
+                        {
+                            story: "The hyperdrive needs complex multiplication calculations!",
+                            question: "What is 47 × 23?",
+                            options: ["1,081", "1,171", "1,061", "1,051"],
+                            correct: 0,
+                            celebration: "🚀 Incredible! You solved advanced multiplication!"
+                        },
+                        {
+                            story: "The Death Star's power core requires division calculations!",
+                            question: "What is 2,484 ÷ 12?",
+                            options: ["207", "197", "217", "187"],
+                            correct: 0,
+                            celebration: "⚡ Amazing! The power core is stabilized!"
+                        },
+                        {
+                            story: "Calculate the escape velocity using fractions!",
+                            question: "What is 3/4 + 2/8?",
+                            options: ["5/12", "1", "5/8", "7/8"],
+                            correct: 1,
+                            celebration: "🛸 Perfect! The ships can escape!"
+                        },
+                        {
+                            story: "The X-wing squadron needs fuel percentages!",
+                            question: "What is 35% of 240?",
+                            options: ["84", "74", "94", "64"],
+                            correct: 0,
+                            celebration: "✈️ Excellent! All fighters are fueled!"
+                        },
+                        {
+                            story: "Calculate the coordinates using decimals!",
+                            question: "What is 15.7 × 4.2?",
+                            options: ["65.94", "66.94", "64.94", "67.94"],
+                            correct: 0,
+                            celebration: "🌟 Outstanding! The secret base is found!"
+                        }
+                    ]
+                },
+                words: {
+                    name: "Vocabularis",
+                    icon: "🌍",
+                    story: "Master Sidd! The Rebellion needs you to decode advanced diplomatic messages. Use your expanded vocabulary!",
+                    missions: [
+                        {
+                            story: "Princess Leia sent an encrypted diplomatic message!",
+                            question: "What does 'ALLIANCE' mean?",
+                            options: ["Enemy group", "Partnership", "Spaceship", "Planet"],
+                            correct: 1,
+                            celebration: "👑 Excellent! The Alliance grows stronger!"
+                        },
+                        {
+                            story: "Yoda's ancient texts use complex words!",
+                            question: "What does 'PERSEVERANCE' mean?",
+                            options: ["Giving up quickly", "Never trying", "Keep trying despite difficulties", "Running away"],
+                            correct: 2,
+                            celebration: "🧙‍♂️ Wise you are! Strong with the Force!"
+                        },
+                        {
+                            story: "The Jedi Council discusses important concepts!",
+                            question: "What does 'DEMOCRACY' mean?",
+                            options: ["Rule by one person", "Government by the people", "No government", "Rule by robots"],
+                            correct: 1,
+                            celebration: "☮️ Perfect! You understand galactic politics!"
+                        },
+                        {
+                            story: "C-3PO found ancient scientific texts!",
+                            question: "What does 'HYPOTHESIS' mean?",
+                            options: ["Proven fact", "Wild guess", "Scientific theory to test", "Old story"],
+                            correct: 2,
+                            celebration: "🌌 Amazing! You think like a scientist!"
+                        },
+                        {
+                            story: "The Rebel strategy requires understanding complex terms!",
+                            question: "What does 'CONSEQUENCE' mean?",
+                            options: ["Something that happens first", "Result of an action", "Type of weapon", "Jedi power"],
+                            correct: 1,
+                            celebration: "🐻 Roooaaaar! Strategic thinking activated!"
+                        }
+                    ]
+                },
+                logic: {
+                    name: "Pattern Nexus",
+                    icon: "🔮",
+                    story: "Jedi Master Sidd! Ancient Sith temples contain complex mathematical patterns. Solve these advanced sequences!",
+                    missions: [
+                        {
+                            story: "The Sith Temple shows a fibonacci-like pattern!",
+                            question: "What comes next? 1, 1, 2, 3, 5, 8, ?",
+                            options: ["11", "13", "15", "12"],
+                            correct: 1,
+                            celebration: "🧘‍♂️ Incredible! You unlocked fibonacci power!"
+                        },
+                        {
+                            story: "The Death Star blueprint reveals a square pattern!",
+                            question: "What comes next? 1, 4, 9, 16, 25, ?",
+                            options: ["30", "35", "36", "49"],
+                            correct: 2,
+                            celebration: "🏛️ Amazing! Perfect squares mastered!"
+                        },
+                        {
+                            story: "Obi-Wan's crystal shows a multiplication pattern!",
+                            question: "What comes next? 2, 6, 18, 54, ?",
+                            options: ["162", "108", "216", "144"],
+                            correct: 0,
+                            celebration: "⚔️ Perfect! The pattern multiplies by 3!"
+                        },
+                        {
+                            story: "The Force reveals a prime number sequence!",
+                            question: "What comes next? 2, 3, 5, 7, 11, ?",
+                            options: ["12", "13", "15", "17"],
+                            correct: 1,
+                            celebration: "🌟 Incredible! Prime numbers flow through you!"
+                        },
+                        {
+                            story: "The Emperor's throne room has an exponential pattern!",
+                            question: "What comes next? 2, 4, 8, 16, 32, ?",
+                            options: ["48", "64", "56", "72"],
+                            correct: 1,
+                            celebration: "💫 Outstanding! Powers of 2 defeated the Empire!"
+                        }
+                    ]
+                }
+            };
+        }
+
+        // Global variable to store current mission data
+        let planetData = {};
 
         const jediRanks = [
             { rank: "Jedi Youngling", icon: "🎓", required: 0 },
@@ -735,16 +1000,35 @@
             { rank: "Jedi Grand Master", icon: "👑", required: 20 }
         ];
 
-        // Initialize game
-        function initGame() {
-            createStars();
+        // Player selection
+        function selectPlayer(player) {
+            gameState.currentPlayer = player;
+            planetData = getMissionData(player);
+            
+            // Hide player selection, show mission selection
+            document.getElementById('playerSelect').style.display = 'none';
+            document.getElementById('missionSelect').style.display = 'block';
+            
+            // Show the Change Player button
+            document.getElementById('playerBtn').style.display = 'inline-block';
+            
+            // Initialize UI after player selection
             updateJediRank();
             updatePlanetProgress();
             
-            // Show welcome message
-            setTimeout(() => {
-                showStory("🌟 Welcome, Young Jedi!", "Your journey begins now! Choose a planet to start your adventure and help save the galaxy. May the Force be with you!");
-            }, 1000);
+            // Update header to show selected player
+            const playerName = player === 'jai' ? 'Jedi Jai' : 'Jedi Sidd';
+            const welcomeMessage = player === 'jai' ? 
+                `🌟 Welcome, Jedi Jai! Ready for some fun learning adventures? Choose your first planet!` :
+                `🌟 Welcome, Jedi Sidd! Ready for advanced galactic challenges? Choose your mission!`;
+            
+            showStory(`Welcome ${playerName}!`, welcomeMessage);
+        }
+
+        // Initialize game
+        function initGame() {
+            createStars();
+            // Don't auto-load mission data or show welcome - wait for player selection
         }
 
         // Create animated stars
@@ -897,6 +1181,25 @@
             gameState.currentPlanet = null;
             gameState.currentMission = 0; // Reset mission counter
             console.log("Returned to mission select, reset mission counter");
+        }
+
+        // Return to player select
+        function returnToPlayerSelect() {
+            document.getElementById('missionScreen').style.display = 'none';
+            document.getElementById('missionSelect').style.display = 'none';
+            document.getElementById('playerSelect').style.display = 'block';
+            
+            // Hide the Change Player button
+            document.getElementById('playerBtn').style.display = 'none';
+            
+            // Reset game state
+            gameState.currentPlayer = null;
+            gameState.currentPlanet = null;
+            gameState.currentMission = 0;
+            gameState.planetProgress = { math: 0, words: 0, logic: 0 };
+            gameState.jediRank = 0;
+            
+            console.log("Returned to player selection, reset all progress");
         }
 
         // Update planet progress
