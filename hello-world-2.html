@@ -787,6 +787,8 @@
             const planet = planetData[gameState.currentPlanet];
             const mission = planet.missions[gameState.currentMission];
             
+            console.log(`Loading mission ${gameState.currentMission + 1} for ${planet.name}`);
+            
             document.getElementById('currentPlanetName').textContent = planet.name;
             document.getElementById('missionStory').textContent = mission.story;
             document.getElementById('challengeQuestion').textContent = mission.question;
@@ -801,9 +803,12 @@
                 const button = document.createElement('button');
                 button.className = 'option-button';
                 button.textContent = option;
+                button.style.pointerEvents = 'auto'; // Ensure buttons are clickable
                 button.onclick = () => selectAnswer(index);
                 optionsContainer.appendChild(button);
             });
+            
+            console.log(`Created ${mission.options.length} buttons for mission`);
         }
 
         // Handle answer selection
@@ -812,13 +817,17 @@
             const mission = planet.missions[gameState.currentMission];
             const buttons = document.querySelectorAll('.option-button');
             
-            // Disable all buttons
+            console.log(`Answer selected: ${selectedIndex}, Correct answer: ${mission.correct}`);
+            
+            // Disable all buttons to prevent multiple clicks
             buttons.forEach(button => button.style.pointerEvents = 'none');
             
             if (selectedIndex === mission.correct) {
                 // Correct answer
                 buttons[selectedIndex].classList.add('correct');
                 playSuccessSound();
+                
+                console.log(`Correct! Advancing from mission ${gameState.currentMission} to ${gameState.currentMission + 1}`);
                 
                 setTimeout(() => {
                     gameState.planetProgress[gameState.currentPlanet]++;
@@ -829,15 +838,18 @@
                     
                     setTimeout(() => {
                         gameState.currentMission++;
+                        console.log(`New mission index: ${gameState.currentMission}, Total missions: ${planet.missions.length}`);
                         
                         if (gameState.currentMission >= planet.missions.length) {
                             // Planet completed!
+                            console.log("Planet completed!");
                             completePlanet();
                         } else {
                             // Next mission
+                            console.log("Loading next mission...");
                             loadCurrentMission();
                         }
-                    }, 2000);
+                    }, 2500); // Increased delay to see achievement better
                 }, 1000);
             } else {
                 // Incorrect answer
@@ -845,12 +857,15 @@
                 buttons[mission.correct].classList.add('correct');
                 playErrorSound();
                 
+                console.log("Incorrect answer, retrying same mission");
+                
                 setTimeout(() => {
                     showAchievement("💪 Good try! Learn from mistakes, young Jedi!");
                     setTimeout(() => {
-                        // Try again
+                        // Try again - don't advance mission
+                        console.log("Reloading current mission for retry");
                         loadCurrentMission();
-                    }, 2000);
+                    }, 2500);
                 }, 1000);
             }
         }
@@ -880,6 +895,8 @@
             document.getElementById('missionScreen').style.display = 'none';
             document.getElementById('missionSelect').style.display = 'block';
             gameState.currentPlanet = null;
+            gameState.currentMission = 0; // Reset mission counter
+            console.log("Returned to mission select, reset mission counter");
         }
 
         // Update planet progress
