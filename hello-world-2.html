@@ -309,6 +309,97 @@
             border: 2px solid #ffe81f;
         }
 
+        .game-controls {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .control-button {
+            background: linear-gradient(45deg, #4fc3f7, #2563eb);
+            color: #fff;
+            border: 2px solid #4fc3f7;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.4);
+            transition: all 0.3s ease;
+            animation: controlGlow 2s ease-in-out infinite alternate;
+        }
+
+        .control-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(79, 195, 247, 0.8);
+            background: linear-gradient(45deg, #2563eb, #4fc3f7);
+        }
+
+        .control-button:active {
+            transform: scale(0.95);
+        }
+
+        .control-button.paused {
+            background: linear-gradient(45deg, #ff4444, #ff6b6b);
+            border-color: #ff4444;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
+        }
+
+        .control-button.paused:hover {
+            background: linear-gradient(45deg, #ff6b6b, #ff4444);
+            box-shadow: 0 0 25px rgba(255, 68, 68, 0.8);
+        }
+
+        @keyframes controlGlow {
+            0% { box-shadow: 0 0 15px rgba(79, 195, 247, 0.4); }
+            100% { box-shadow: 0 0 25px rgba(79, 195, 247, 0.6); }
+        }
+
+        .pause-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .pause-message {
+            background: rgba(10, 10, 46, 0.9);
+            color: #ffe81f;
+            padding: 40px 60px;
+            border-radius: 20px;
+            border: 3px solid #ffe81f;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 232, 31, 0.5);
+        }
+
+        .pause-message h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ffe81f;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .pause-message p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
         .achievement {
             position: fixed;
             top: 50%;
@@ -419,6 +510,28 @@
         🏆 Jedi Points: <span id="score">0</span>
     </div>
 
+    <div class="game-controls">
+        <button class="control-button" id="pauseBtn" onclick="togglePause()">
+            <span id="pauseIcon">⏸️</span>
+            <span id="pauseText">Pause</span>
+        </button>
+        <button class="control-button" onclick="restartGame()">
+            <span>🔄</span>
+            <span>Restart</span>
+        </button>
+    </div>
+
+    <div class="pause-overlay" id="pauseOverlay">
+        <div class="pause-message">
+            <h2>⏸️ Game Paused</h2>
+            <p>The Force is taking a break...</p>
+            <button class="control-button" onclick="togglePause()">
+                <span>▶️</span>
+                <span>Resume Training</span>
+            </button>
+        </div>
+    </div>
+
     <div class="stars" id="stars"></div>
 
     <div class="floating-elements">
@@ -459,6 +572,9 @@
         let mouseX = 0;
         let mouseY = 0;
         let targets = [];
+        let isPaused = false;
+        let targetInterval;
+        let gameStarted = false;
         
         const soundEffects = ['💥 WHOOSH!', '⚡ ZAP!', '✨ BOOM!', '🔥 POW!', '💫 BZZT!'];
         const achievements = [
@@ -645,6 +761,8 @@
 
         // Check for target hits
         function checkTargetHits() {
+            if (isPaused) return;
+            
             targets.forEach((target, index) => {
                 if (target.hit) return;
                 
@@ -680,10 +798,123 @@
             });
         }
 
+        // Toggle pause function
+        function togglePause() {
+            isPaused = !isPaused;
+            const pauseOverlay = document.getElementById('pauseOverlay');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const pauseText = document.getElementById('pauseText');
+            
+            if (isPaused) {
+                pauseOverlay.style.display = 'flex';
+                pauseBtn.classList.add('paused');
+                pauseIcon.textContent = '▶️';
+                pauseText.textContent = 'Resume';
+                
+                // Pause all targets
+                targets.forEach(target => {
+                    if (target.element.style.animationPlayState !== 'paused') {
+                        target.element.style.animationPlayState = 'paused';
+                    }
+                });
+                
+                // Pause floating elements
+                const floatingElements = document.querySelectorAll('.floating-element');
+                floatingElements.forEach(element => {
+                    element.style.animationPlayState = 'paused';
+                });
+                
+                // Pause stars
+                const stars = document.querySelectorAll('.star');
+                stars.forEach(star => {
+                    star.style.animationPlayState = 'paused';
+                });
+                
+            } else {
+                pauseOverlay.style.display = 'none';
+                pauseBtn.classList.remove('paused');
+                pauseIcon.textContent = '⏸️';
+                pauseText.textContent = 'Pause';
+                
+                // Resume all targets
+                targets.forEach(target => {
+                    target.element.style.animationPlayState = 'running';
+                });
+                
+                // Resume floating elements
+                const floatingElements = document.querySelectorAll('.floating-element');
+                floatingElements.forEach(element => {
+                    element.style.animationPlayState = 'running';
+                });
+                
+                // Resume stars
+                const stars = document.querySelectorAll('.star');
+                stars.forEach(star => {
+                    star.style.animationPlayState = 'running';
+                });
+            }
+        }
+
+        // Restart game function
+        function restartGame() {
+            // Reset score
+            score = 0;
+            document.getElementById('score').textContent = score;
+            
+            // Remove all targets
+            targets.forEach(target => {
+                if (target.element.parentNode) {
+                    target.element.remove();
+                }
+            });
+            targets = [];
+            
+            // Remove any active effects
+            const effects = document.querySelectorAll('.spark, .force-wave, .force-lightning, .sound-effect, .achievement');
+            effects.forEach(effect => {
+                if (effect.parentNode) {
+                    effect.remove();
+                }
+            });
+            
+            // If paused, resume the game
+            if (isPaused) {
+                togglePause();
+            }
+            
+            // Restart target generation
+            clearInterval(targetInterval);
+            startTargetGeneration();
+            
+            // Show restart message
+            createSoundEffect('🚀 Game Restarted!', window.innerWidth / 2, window.innerHeight / 2);
+            showAchievement('🎮 New Training Session!');
+        }
+
+        // Start target generation
+        function startTargetGeneration() {
+            // Create targets periodically
+            targetInterval = setInterval(() => {
+                if (!isPaused && targets.length < 4) {
+                    createTarget();
+                }
+            }, 3000);
+            
+            // Create initial targets
+            if (!isPaused) {
+                setTimeout(() => { if (!isPaused) createTarget(); }, 1000);
+                setTimeout(() => { if (!isPaused) createTarget(); }, 2000);
+                setTimeout(() => { if (!isPaused) createTarget(); }, 3000);
+            }
+        }
+
         // Event listeners
         document.addEventListener('mousemove', updateLightsaber);
 
         document.addEventListener('click', (e) => {
+            if (isPaused) return;
+            
             createForceLightning(e.clientX, e.clientY);
             createForceWave(e.clientX, e.clientY);
             createSparks(e.clientX, e.clientY, 12);
@@ -693,20 +924,22 @@
             createSoundEffect(randomEffect, e.clientX, e.clientY);
         });
 
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.key === ' ') {
+                e.preventDefault();
+                togglePause();
+            }
+            if (e.key === 'r' || e.key === 'R') {
+                e.preventDefault();
+                restartGame();
+            }
+        });
+
         // Initialize
         createStars();
-        
-        // Create targets periodically
-        setInterval(() => {
-            if (targets.length < 4) {
-                createTarget();
-            }
-        }, 3000);
-
-        // Create initial targets
-        setTimeout(() => createTarget(), 1000);
-        setTimeout(() => createTarget(), 2000);
-        setTimeout(() => createTarget(), 3000);
+        startTargetGeneration();
+        gameStarted = true;
     </script>
 </body>
 </html> 
