@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+            background: black;
+        }
+        #starfield {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+        }
+        .starwars {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .logo {
+            font-family: 'Orbitron', Arial, sans-serif;
+            color: #ffe81f;
+            font-size: 3rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px #ffe81f, 0 0 40px #fff200;
+            animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+            text-shadow: 0 0 30px #ffe81f, 0 0 60px #fff200, 0 0 90px #fff;
+        }
+        .crawl {
+            font-family: 'Orbitron', Arial, sans-serif;
+            color: #ffe81f;
+            font-size: 3rem;
+            text-align: center;
+            text-shadow: 0 0 20px #ffe81f, 0 0 40px #fff200;
+            animation: crawl 12s linear infinite, glow 2s ease-in-out infinite alternate;
+            margin-bottom: 2rem;
+        }
+        @keyframes crawl {
+            0% { transform: perspective(400px) rotateX(20deg) translateY(100px) scale(1.2); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: perspective(400px) rotateX(25deg) translateY(-300px) scale(0.7); opacity: 0; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 20px #ffe81f, 0 0 40px #fff200; }
+            100% { text-shadow: 0 0 30px #ffe81f, 0 0 60px #fff200, 0 0 90px #fff; }
+        }
+        #clock {
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 1.5rem;
+            color: #ffe81f;
+            text-align: center;
+            text-shadow: 0 0 10px #ffe81f, 0 0 20px #fff200;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #ffe81f;
+            border-radius: 12px;
+            padding: 0.5rem 1.5rem;
+            display: inline-block;
+            margin-top: 1rem;
+            animation: clockFloat 4s ease-in-out infinite, clockGlow 3s ease-in-out infinite alternate;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #clock:hover {
+            transform: scale(1.05);
+            border-color: #fff;
+            box-shadow: 0 0 20px #ffe81f;
+        }
+        @keyframes clockFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(1deg); }
+        }
+        @keyframes clockGlow {
+            0% { box-shadow: 0 0 10px #ffe81f; }
+            100% { box-shadow: 0 0 20px #ffe81f, 0 0 30px #fff200; }
+        }
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .floating-element {
+            position: absolute;
+            color: #ffe81f;
+            font-size: 1.5rem;
+            opacity: 0.6;
+            animation: floatAround 15s linear infinite;
+        }
+        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .floating-element:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 6s; }
+        .floating-element:nth-child(5) { top: 50%; left: 5%; animation-delay: 8s; }
+        .floating-element:nth-child(6) { top: 60%; right: 5%; animation-delay: 10s; }
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
+            25% { transform: translate(100px, -50px) rotate(90deg); opacity: 0.8; }
+            50% { transform: translate(50px, -100px) rotate(180deg); opacity: 0.4; }
+            75% { transform: translate(-50px, -50px) rotate(270deg); opacity: 0.8; }
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.6; }
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffe81f;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 8s linear infinite;
+        }
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: translateY(90vh) scale(1); }
+            90% { opacity: 1; transform: translateY(10vh) scale(1); }
+            100% { transform: translateY(0) scale(0); opacity: 0; }
+        }
+        
+        .nav-button {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+            animation: buttonGlow 2s ease-in-out infinite alternate;
+        }
+        
+        .nav-button:hover {
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+        
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        @keyframes buttonGlow {
+            0% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(102, 126, 234, 0.8), 0 0 40px rgba(255, 255, 255, 0.3); }
+        }
+        
+        .button-icon {
+            font-size: 1.2rem;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <a href="hello-world-2.html" class="nav-button">
+        <span class="button-icon">🎨</span>
+        <span>Switch to Movement Mode</span>
+    </a>
+    <a href="prashant-bio.html" class="nav-button" style="top: 130px;">
+        <span class="button-icon">👤</span>
+        <span>Prashant Bio</span>
+    </a>
+    
+    <canvas id="starfield"></canvas>
+    <div class="floating-elements">
+        <div class="floating-element">★</div>
+        <div class="floating-element">⚡</div>
+        <div class="floating-element">✨</div>
+        <div class="floating-element">🌟</div>
+        <div class="floating-element">💫</div>
+        <div class="floating-element">⭐</div>
+    </div>
+    <div class="starwars">
+        <div class="logo" onclick="addParticles()">STAR WARS</div>
+        <div class="crawl">Hello World!</div>
+        <div id="clock" onclick="addParticles()"></div>
+    </div>
+    <script>
+        // Starfield background
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let W = window.innerWidth;
+        let H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+        const numStars = 200;
+        let stars = [];
+        function randomStar() {
+            return {
+                x: Math.random() * W,
+                y: Math.random() * H,
+                z: Math.random() * W,
+                o: 0.7 + Math.random() * 0.3
+            };
+        }
+        for (let i = 0; i < numStars; i++) stars.push(randomStar());
+        function drawStars() {
+            ctx.clearRect(0, 0, W, H);
+            for (let i = 0; i < numStars; i++) {
+                let star = stars[i];
+                let k = 128.0 / star.z;
+                let sx = star.x * k + W / 2;
+                let sy = star.y * k + H / 2;
+                if (sx < 0 || sx >= W || sy < 0 || sy >= H) {
+                    stars[i] = randomStar();
+                    stars[i].z = W;
+                    continue;
+                }
+                let size = (1 - star.z / W) * 2.5;
+                ctx.beginPath();
+                ctx.arc(sx, sy, size, 0, 2 * Math.PI);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.o})`;
+                ctx.fill();
+                star.z -= 2;
+                if (star.z < 1) star.z = W;
+            }
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+        window.addEventListener('resize', () => {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W;
+            canvas.height = H;
+        });
+        // Live clock
+        function updateClock() {
+            const clock = document.getElementById('clock');
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString(undefined, options);
+            const timeStr = now.toLocaleTimeString();
+            clock.innerHTML = `<span>${dateStr}</span><br/><span>${timeStr}</span>`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        // Particle effect on click
+        function addParticles() {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 8000);
+            }
+        }
+        
+        // Add random particles periodically
+        setInterval(() => {
+            if (Math.random() < 0.3) { // 30% chance every interval
+                addParticles();
+            }
+        }, 3000);
+        
+        // Mouse trail effect
+        let mouseTrail = [];
+        document.addEventListener('mousemove', (e) => {
+            const trail = document.createElement('div');
+            trail.style.position = 'fixed';
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+            trail.style.width = '6px';
+            trail.style.height = '6px';
+            trail.style.background = '#ffe81f';
+            trail.style.borderRadius = '50%';
+            trail.style.pointerEvents = 'none';
+            trail.style.zIndex = '1000';
+            trail.style.opacity = '0.8';
+            document.body.appendChild(trail);
+            
+            mouseTrail.push(trail);
+            
+            setTimeout(() => {
+                trail.style.opacity = '0';
+                trail.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    if (trail.parentNode) {
+                        trail.remove();
+                        mouseTrail = mouseTrail.filter(t => t !== trail);
+                    }
+                }, 300);
+            }, 100);
+        });
+    </script>
+</body>
+</html> 
