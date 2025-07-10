@@ -616,10 +616,6 @@
             <span id="pauseIcon">⏸️</span>
             <span id="pauseText">Pause</span>
         </button>
-        <button class="control-button" onclick="restartGame()">
-            <span>🔄</span>
-            <span>Restart</span>
-        </button>
     </div>
 
     <div class="pause-overlay" id="pauseOverlay">
@@ -1459,10 +1455,6 @@
             if (e.code === 'Space' || e.key === ' ') {
                 e.preventDefault();
                 togglePause();
-            }
-            if (e.key === 'r' || e.key === 'R') {
-                e.preventDefault();
-                restartGame();
             }
         });
 
