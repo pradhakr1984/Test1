@@ -608,6 +608,10 @@
     </div>
 
     <div class="game-controls">
+        <button class="control-button" id="audioBtn" onclick="toggleAudio()">
+            <span id="audioIcon">🔊</span>
+            <span id="audioText">Enable Audio</span>
+        </button>
         <button class="control-button" id="pauseBtn" onclick="togglePause()">
             <span id="pauseIcon">⏸️</span>
             <span id="pauseText">Pause</span>
@@ -679,6 +683,12 @@
         let sequencesCompleted = 0;
         let totalLearningGoal = 30; // 10 of each type
         
+        // Audio system
+        let audioContext;
+        let audioEnabled = false;
+        let lightsaberHumGain;
+        let lightsaberOscillator;
+        
         const soundEffects = ['💥 WHOOSH!', '⚡ ZAP!', '✨ BOOM!', '🔥 POW!', '💫 BZZT!'];
         const achievements = [
             '🌟 Excellent!', '🚀 Fantastic!', '⚔️ Amazing!', '🏆 Incredible!', 
@@ -723,6 +733,204 @@
             [1, 4, 7, 10], [2, 5, 8, 11], [10, 20, 30, 40], [1, 2, 4, 8]
         ];
 
+        // Initialize audio system
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                audioEnabled = true;
+                
+                // Start lightsaber hum
+                startLightsaberHum();
+                
+                // Play startup sound
+                playStartupSound();
+                
+                console.log('Audio system initialized successfully');
+            } catch (error) {
+                console.log('Audio not supported:', error);
+                audioEnabled = false;
+            }
+        }
+
+        // Start continuous lightsaber hum
+        function startLightsaberHum() {
+            if (!audioEnabled) return;
+            
+            try {
+                // Create oscillator for the hum
+                lightsaberOscillator = audioContext.createOscillator();
+                lightsaberHumGain = audioContext.createGain();
+                
+                // Low frequency hum
+                lightsaberOscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+                lightsaberOscillator.type = 'sawtooth';
+                
+                // Very quiet background hum
+                lightsaberHumGain.gain.setValueAtTime(0.03, audioContext.currentTime);
+                
+                // Connect and start
+                lightsaberOscillator.connect(lightsaberHumGain);
+                lightsaberHumGain.connect(audioContext.destination);
+                lightsaberOscillator.start();
+                
+                // Add slight vibrato
+                const vibrato = audioContext.createOscillator();
+                const vibratoGain = audioContext.createGain();
+                vibrato.frequency.setValueAtTime(6, audioContext.currentTime);
+                vibratoGain.gain.setValueAtTime(5, audioContext.currentTime);
+                vibrato.connect(vibratoGain);
+                vibratoGain.connect(lightsaberOscillator.frequency);
+                vibrato.start();
+            } catch (error) {
+                console.log('Lightsaber hum failed:', error);
+            }
+        }
+
+        // Play startup sound
+        function playStartupSound() {
+            if (!audioEnabled) return;
+            
+            const duration = 1.5;
+            const now = audioContext.currentTime;
+            
+            // Create oscillator for startup sound
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            // Startup sweep from low to high
+            osc.frequency.setValueAtTime(200, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + duration);
+            osc.type = 'square';
+            
+            // Fade in and out
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.1, now + 0.1);
+            gain.gain.linearRampToValueAtTime(0, now + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+
+        // Play Force lightning sound
+        function playLightningSound() {
+            if (!audioEnabled) return;
+            
+            const duration = 0.3;
+            const now = audioContext.currentTime;
+            
+            // Create noise for lightning
+            const bufferSize = audioContext.sampleRate * duration;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            // Generate white noise
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.1;
+            }
+            
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.setValueAtTime(2000, now);
+            
+            const gain = audioContext.createGain();
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+            noise.start(now);
+            noise.stop(now + duration);
+        }
+
+        // Play target hit sound
+        function playHitSound(type = 'normal') {
+            if (!audioEnabled) return;
+            
+            const duration = 0.4;
+            const now = audioContext.currentTime;
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            // Different pitches for different target types
+            let frequency = 440; // A note
+            if (type === 'math') frequency = 523; // C note
+            if (type === 'word') frequency = 659; // E note
+            if (type === 'sequence') frequency = 784; // G note
+            
+            osc.frequency.setValueAtTime(frequency, now);
+            osc.frequency.exponentialRampToValueAtTime(frequency * 1.5, now + 0.1);
+            osc.frequency.exponentialRampToValueAtTime(frequency, now + duration);
+            osc.type = 'triangle';
+            
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+
+        // Play achievement sound
+        function playAchievementSound() {
+            if (!audioEnabled) return;
+            
+            const now = audioContext.currentTime;
+            const notes = [523, 659, 784, 1047]; // C, E, G, C (major chord)
+            
+            notes.forEach((freq, index) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.frequency.setValueAtTime(freq, now + index * 0.1);
+                osc.type = 'sine';
+                
+                gain.gain.setValueAtTime(0.1, now + index * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + index * 0.1 + 0.5);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.start(now + index * 0.1);
+                osc.stop(now + index * 0.1 + 0.5);
+            });
+        }
+
+        // Play whoosh sound for Force waves
+        function playWhooshSound() {
+            if (!audioEnabled) return;
+            
+            const duration = 0.6;
+            const now = audioContext.currentTime;
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            osc.frequency.setValueAtTime(100, now);
+            osc.frequency.exponentialRampToValueAtTime(50, now + duration);
+            osc.type = 'sawtooth';
+            
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1000, now);
+            filter.frequency.exponentialRampToValueAtTime(200, now + duration);
+            
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+
         // Create star field
         function createStars() {
             const starsContainer = document.getElementById('stars');
@@ -760,6 +968,25 @@
             lightsaberColor = color;
             const lightsaber = document.getElementById('lightsaber');
             lightsaber.className = `lightsaber ${color}`;
+            
+            // Play color change sound
+            if (audioEnabled) {
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.linearRampToValueAtTime(400, now + 0.2);
+                osc.type = 'sine';
+                
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
             
             // Add sound effect
             createSoundEffect('🎨 Color changed!', mouseX, mouseY);
@@ -1010,16 +1237,19 @@
                 message = `🧮 Math: ${target.problem.question} = ${target.problem.answer}`;
                 learningType = '🧮 Great Math Skills!';
                 document.getElementById('mathCount').textContent = mathProblemsCorrect;
+                playHitSound('math');
             } else if (target.type === 'word') {
                 wordsLearned++;
                 message = `📖 Word: "${target.word}" - You're building vocabulary!`;
                 learningType = '📖 Vocabulary Master!';
                 document.getElementById('wordCount').textContent = wordsLearned;
+                playHitSound('word');
             } else if (target.type === 'sequence') {
                 sequencesCompleted++;
                 message = `🔢 Sequence: ${target.sequence.join(',')} - Answer: ${target.answer}`;
                 learningType = '🔢 Pattern Detective!';
                 document.getElementById('sequenceCount').textContent = sequencesCompleted;
+                playHitSound('sequence');
             }
             
             // Show educational achievement
@@ -1034,8 +1264,10 @@
             // Special achievement for completing learning goals
             if (totalProgress === totalLearningGoal) {
                 showLearningAchievement('🎓 Young Jedi Scholar! Learning Complete!');
+                playAchievementSound();
             } else if (totalProgress % 10 === 0) {
                 showLearningAchievement('📚 Learning Milestone Reached!');
+                playAchievementSound();
             }
         }
 
@@ -1049,6 +1281,38 @@
             setTimeout(() => {
                 achievement.remove();
             }, 3000);
+        }
+
+        // Toggle audio system
+        function toggleAudio() {
+            const audioBtn = document.getElementById('audioBtn');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+            
+            if (!audioEnabled) {
+                initAudio();
+                if (audioEnabled) {
+                    audioIcon.textContent = '🔊';
+                    audioText.textContent = 'Audio On';
+                    audioBtn.style.background = 'linear-gradient(45deg, #4ade80, #22c55e)';
+                    audioBtn.style.borderColor = '#4ade80';
+                }
+            } else {
+                // Stop lightsaber hum
+                if (lightsaberOscillator) {
+                    lightsaberOscillator.stop();
+                    lightsaberOscillator = null;
+                }
+                if (audioContext) {
+                    audioContext.close();
+                    audioContext = null;
+                }
+                audioEnabled = false;
+                audioIcon.textContent = '🔇';
+                audioText.textContent = 'Audio Off';
+                audioBtn.style.background = 'linear-gradient(45deg, #6b7280, #4b5563)';
+                audioBtn.style.borderColor = '#6b7280';
+            }
         }
 
         // Toggle pause function
@@ -1180,6 +1444,10 @@
             createForceLightning(e.clientX, e.clientY);
             createForceWave(e.clientX, e.clientY);
             createSparks(e.clientX, e.clientY, 12);
+            
+            // Play Force power sounds
+            playLightningSound();
+            playWhooshSound();
             
             // Random sound effect
             const randomEffect = soundEffects[Math.floor(Math.random() * soundEffects.length)];
