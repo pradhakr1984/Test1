@@ -506,15 +506,29 @@
             position: fixed;
             bottom: 130px;
             left: 30px;
-            background: rgba(0,0,0,0.8);
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(10,10,46,0.9));
             color: #ffe81f;
-            padding: 15px 20px;
-            border-radius: 15px;
-            border: 2px solid #ffe81f;
+            padding: 20px 25px;
+            border-radius: 20px;
+            border: 3px solid #ffe81f;
             z-index: 1000;
-            font-size: 1rem;
-            text-shadow: 0 0 10px #ffe81f;
-            max-width: 250px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-shadow: 0 0 15px #ffe81f;
+            max-width: 280px;
+            box-shadow: 0 0 30px rgba(255, 232, 31, 0.6);
+            animation: educationGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes educationGlow {
+            0% { 
+                box-shadow: 0 0 30px rgba(255, 232, 31, 0.6);
+                border-color: #ffe81f;
+            }
+            100% { 
+                box-shadow: 0 0 40px rgba(255, 232, 31, 0.8), 0 0 60px rgba(79, 195, 247, 0.4);
+                border-color: #4fc3f7;
+            }
         }
 
         .progress-bar {
@@ -644,9 +658,9 @@
         <h1 class="title">Hello World!</h1>
         <p class="subtitle">🌟 Young Jedi Training Academy 🌟</p>
         <div class="instructions">
-            Move your lightsaber around the screen!<br>
-            Click anywhere to use awesome Force powers!<br>
-            Hit the learning targets: 🧮 Math (blue) • 📖 Words (green) • 🔢 Sequences (purple)
+            ⚔️ Move your lightsaber to hit the colorful learning targets!<br>
+            🧮 <strong>BLUE targets = Math Problems</strong> • 📖 <strong>GREEN targets = Vocabulary Words</strong> • 🔢 <strong>PURPLE targets = Number Sequences</strong><br>
+            💥 Click anywhere to use awesome Force powers!
         </div>
         <div class="encouragement">
             🚀 Learn while you play, young Jedi! Knowledge is your greatest power! ⚔️
@@ -733,17 +747,26 @@
         function initAudio() {
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                audioEnabled = true;
                 
-                // Start lightsaber hum
-                startLightsaberHum();
-                
-                // Play startup sound
-                playStartupSound();
-                
-                console.log('Audio system initialized successfully');
+                // Resume audio context if it's suspended (browser autoplay policy)
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        audioEnabled = true;
+                        startLightsaberHum();
+                        playStartupSound();
+                        console.log('Audio system initialized after resume');
+                    }).catch(error => {
+                        console.error('Failed to resume audio context:', error);
+                        audioEnabled = false;
+                    });
+                } else {
+                    audioEnabled = true;
+                    startLightsaberHum();
+                    playStartupSound();
+                    console.log('Audio system initialized successfully');
+                }
             } catch (error) {
-                console.log('Audio not supported:', error);
+                console.error('Audio not supported:', error);
                 audioEnabled = false;
             }
         }
@@ -1286,28 +1309,59 @@
             const audioText = document.getElementById('audioText');
             
             if (!audioEnabled) {
-                initAudio();
-                if (audioEnabled) {
-                    audioIcon.textContent = '🔊';
-                    audioText.textContent = 'Audio On';
-                    audioBtn.style.background = 'linear-gradient(45deg, #4ade80, #22c55e)';
-                    audioBtn.style.borderColor = '#4ade80';
+                try {
+                    initAudio();
+                    if (audioEnabled) {
+                        audioIcon.textContent = '🔊';
+                        audioText.textContent = 'Audio On';
+                        audioBtn.style.background = 'linear-gradient(45deg, #4ade80, #22c55e)';
+                        audioBtn.style.borderColor = '#4ade80';
+                        
+                        // Show confirmation
+                        createSoundEffect('🔊 Audio Enabled!', window.innerWidth / 2, 100);
+                        console.log('Audio successfully enabled');
+                    } else {
+                        // Audio failed to initialize
+                        audioIcon.textContent = '🔇';
+                        audioText.textContent = 'Audio Failed';
+                        createSoundEffect('❌ Audio Not Available', window.innerWidth / 2, 100);
+                        console.log('Audio failed to initialize');
+                    }
+                } catch (error) {
+                    console.error('Audio toggle error:', error);
+                    audioIcon.textContent = '🔇';
+                    audioText.textContent = 'Audio Error';
+                    createSoundEffect('❌ Audio Error', window.innerWidth / 2, 100);
                 }
             } else {
                 // Stop lightsaber hum
                 if (lightsaberOscillator) {
-                    lightsaberOscillator.stop();
+                    try {
+                        lightsaberOscillator.stop();
+                    } catch (e) {
+                        console.log('Error stopping oscillator:', e);
+                    }
                     lightsaberOscillator = null;
                 }
+                if (lightsaberHumGain) {
+                    lightsaberHumGain = null;
+                }
                 if (audioContext) {
-                    audioContext.close();
+                    try {
+                        audioContext.close();
+                    } catch (e) {
+                        console.log('Error closing audio context:', e);
+                    }
                     audioContext = null;
                 }
                 audioEnabled = false;
                 audioIcon.textContent = '🔇';
-                audioText.textContent = 'Audio Off';
-                audioBtn.style.background = 'linear-gradient(45deg, #6b7280, #4b5563)';
-                audioBtn.style.borderColor = '#6b7280';
+                audioText.textContent = 'Enable Audio';
+                audioBtn.style.background = 'linear-gradient(45deg, #4fc3f7, #2563eb)';
+                audioBtn.style.borderColor = '#4fc3f7';
+                
+                createSoundEffect('🔇 Audio Disabled', window.innerWidth / 2, 100);
+                console.log('Audio disabled');
             }
         }
 
@@ -1416,18 +1470,18 @@
 
         // Start target generation
         function startTargetGeneration() {
-            // Create targets periodically
+            // Create targets periodically - more frequently for better learning experience
             targetInterval = setInterval(() => {
-                if (!isPaused && targets.length < 4) {
+                if (!isPaused && targets.length < 5) {  // Allow one more target
                     createTarget();
                 }
-            }, 3000);
+            }, 2500);  // Create targets every 2.5 seconds instead of 3
             
             // Create initial targets
             if (!isPaused) {
-                setTimeout(() => { if (!isPaused) createTarget(); }, 1000);
-                setTimeout(() => { if (!isPaused) createTarget(); }, 2000);
-                setTimeout(() => { if (!isPaused) createTarget(); }, 3000);
+                setTimeout(() => { if (!isPaused) createTarget(); }, 500);  // First target sooner
+                setTimeout(() => { if (!isPaused) createTarget(); }, 1500);
+                setTimeout(() => { if (!isPaused) createTarget(); }, 2500);
             }
         }
 
@@ -1462,6 +1516,22 @@
         createStars();
         startTargetGeneration();
         gameStarted = true;
+        
+        // Show initial educational guidance
+        setTimeout(() => {
+            showLearningAchievement('🎓 Welcome to Jedi Academy! Hit colorful targets to learn!');
+        }, 2000);
+        
+        setTimeout(() => {
+            createSoundEffect('🧮 BLUE = Math • 📖 GREEN = Words • 🔢 PURPLE = Sequences', window.innerWidth / 2, window.innerHeight - 100);
+        }, 4000);
+        
+        // Show audio reminder if not enabled after 5 seconds
+        setTimeout(() => {
+            if (!audioEnabled) {
+                createSoundEffect('🔊 Click "Enable Audio" for sounds!', window.innerWidth / 2, 150);
+            }
+        }, 6000);
     </script>
 </body>
 </html> 
