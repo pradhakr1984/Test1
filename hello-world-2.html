@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World - Movement Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Hello World - Jedi Training Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,11 +13,34 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle at center, #0a0a2e 0%, #000000 100%);
             min-height: 100vh;
             overflow: hidden;
             position: relative;
+            cursor: none;
+        }
+
+        /* Star field background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
         .container {
@@ -31,254 +54,182 @@
         }
 
         .title {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 900;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 2rem;
-            animation: bounce 2s ease-in-out infinite, glow 3s ease-in-out infinite alternate;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .title:hover {
-            transform: scale(1.1) rotate(5deg);
-            text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+            color: #ffe81f;
+            text-shadow: 0 0 20px #ffe81f, 0 0 40px #fff200, 0 0 60px #fff200;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+            text-align: center;
         }
 
         .subtitle {
             font-size: 1.5rem;
-            color: rgba(255,255,255,0.9);
-            animation: wave 2s ease-in-out infinite;
-            margin-bottom: 3rem;
+            color: #4fc3f7;
+            text-shadow: 0 0 10px #4fc3f7;
+            margin-bottom: 2rem;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-align: center;
         }
 
-        .bouncing-balls {
+        .instructions {
+            font-size: 1rem;
+            color: #ffe81f;
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Lightsaber cursor */
+        .lightsaber {
+            position: fixed;
+            width: 8px;
+            height: 120px;
+            background: linear-gradient(to top, transparent 0%, #4fc3f7 20%, #ffffff 50%, #4fc3f7 80%, transparent 100%);
+            border-radius: 4px;
+            box-shadow: 0 0 20px #4fc3f7, 0 0 40px #4fc3f7, 0 0 60px #4fc3f7;
+            pointer-events: none;
+            z-index: 1000;
+            transform-origin: bottom center;
+            animation: saberHum 0.1s ease-in-out infinite alternate;
+        }
+
+        .lightsaber.red {
+            background: linear-gradient(to top, transparent 0%, #ff4444 20%, #ffffff 50%, #ff4444 80%, transparent 100%);
+            box-shadow: 0 0 20px #ff4444, 0 0 40px #ff4444, 0 0 60px #ff4444;
+        }
+
+        .lightsaber.green {
+            background: linear-gradient(to top, transparent 0%, #4ade80 20%, #ffffff 50%, #4ade80 80%, transparent 100%);
+            box-shadow: 0 0 20px #4ade80, 0 0 40px #4ade80, 0 0 60px #4ade80;
+        }
+
+        .lightsaber.purple {
+            background: linear-gradient(to top, transparent 0%, #a855f7 20%, #ffffff 50%, #a855f7 80%, transparent 100%);
+            box-shadow: 0 0 20px #a855f7, 0 0 40px #a855f7, 0 0 60px #a855f7;
+        }
+
+        .lightsaber-hilt {
+            position: fixed;
+            width: 12px;
+            height: 30px;
+            background: linear-gradient(to bottom, #c0c0c0, #808080, #404040);
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 999;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        @keyframes saberHum {
+            0% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        /* Force powers */
+        .force-lightning {
+            position: fixed;
+            pointer-events: none;
+            z-index: 500;
+        }
+
+        .lightning-bolt {
             position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, #ffffff, #4fc3f7, #ffffff);
+            box-shadow: 0 0 10px #4fc3f7;
+            animation: lightning 0.1s ease-in-out infinite;
+        }
+
+        @keyframes lightning {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.7; transform: scaleY(1.1); }
+        }
+
+        /* Floating objects */
+        .floating-elements {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
-            z-index: 1;
+            z-index: 5;
         }
 
-        .ball {
+        .floating-element {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            animation: bounce 3s ease-in-out infinite;
-        }
-
-        .ball:nth-child(1) {
-            background: #ff6b6b;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .ball:nth-child(2) {
-            background: #4ecdc4;
-            left: 20%;
-            animation-delay: 0.5s;
-        }
-
-        .ball:nth-child(3) {
-            background: #45b7d1;
-            left: 30%;
-            animation-delay: 1s;
-        }
-
-        .ball:nth-child(4) {
-            background: #96ceb4;
-            left: 40%;
-            animation-delay: 1.5s;
-        }
-
-        .ball:nth-child(5) {
-            background: #feca57;
-            left: 50%;
-            animation-delay: 2s;
-        }
-
-        .ball:nth-child(6) {
-            background: #ff9ff3;
-            left: 60%;
-            animation-delay: 2.5s;
-        }
-
-        .ball:nth-child(7) {
-            background: #54a0ff;
-            left: 70%;
-            animation-delay: 3s;
-        }
-
-        .ball:nth-child(8) {
-            background: #5f27cd;
-            left: 80%;
-            animation-delay: 3.5s;
-        }
-
-        .ball:nth-child(9) {
-            background: #00d2d3;
-            left: 90%;
-            animation-delay: 4s;
-        }
-
-        .rotating-circles {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .circle {
-            position: absolute;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            animation: rotate 10s linear infinite;
-        }
-
-        .circle:nth-child(1) {
-            width: 100px;
-            height: 100px;
-            animation-duration: 10s;
-        }
-
-        .circle:nth-child(2) {
-            width: 150px;
-            height: 150px;
-            animation-duration: 15s;
-            animation-direction: reverse;
-        }
-
-        .circle:nth-child(3) {
-            width: 200px;
-            height: 200px;
-            animation-duration: 20s;
-        }
-
-        .floating-words {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 3;
-        }
-
-        .word {
-            position: absolute;
-            color: rgba(255,255,255,0.7);
+            color: #ffe81f;
             font-size: 1.2rem;
-            font-weight: 700;
-            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+            animation: floatAround 20s linear infinite;
+            text-shadow: 0 0 10px #ffe81f;
         }
 
-        .word:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
-        .word:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
-        .word:nth-child(3) { bottom: 30%; left: 15%; animation-delay: 2s; }
-        .word:nth-child(4) { bottom: 20%; right: 5%; animation-delay: 3s; }
-        .word:nth-child(5) { top: 50%; left: 8%; animation-delay: 4s; }
-        .word:nth-child(6) { top: 60%; right: 8%; animation-delay: 5s; }
+        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 3s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 6s; }
+        .floating-element:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 9s; }
+        .floating-element:nth-child(5) { top: 50%; left: 5%; animation-delay: 12s; }
+        .floating-element:nth-child(6) { top: 60%; right: 5%; animation-delay: 15s; }
 
-        .wave-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            overflow: hidden;
-            z-index: 4;
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
+            25% { transform: translate(50px, -30px) rotate(90deg); opacity: 0.8; }
+            50% { transform: translate(20px, -60px) rotate(180deg); opacity: 0.4; }
+            75% { transform: translate(-30px, -30px) rotate(270deg); opacity: 0.8; }
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.6; }
         }
 
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200%;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50% 50% 0 0;
-            animation: waveMove 4s ease-in-out infinite;
+        /* Particle effects */
+        .spark {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #ffe81f;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 800;
+            box-shadow: 0 0 6px #ffe81f;
         }
 
-        .wave:nth-child(2) {
-            animation-delay: 1s;
-            background: rgba(255,255,255,0.05);
+        .force-wave {
+            position: fixed;
+            border: 2px solid #4fc3f7;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 600;
+            animation: expandFade 1s ease-out forwards;
         }
 
-        .wave:nth-child(3) {
-            animation-delay: 2s;
-            background: rgba(255,255,255,0.03);
+        @keyframes expandFade {
+            0% { 
+                width: 20px; 
+                height: 20px; 
+                opacity: 1; 
+                box-shadow: 0 0 20px #4fc3f7; 
+            }
+            100% { 
+                width: 200px; 
+                height: 200px; 
+                opacity: 0; 
+                box-shadow: 0 0 60px #4fc3f7; 
+            }
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-            100% { text-shadow: 2px 2px 20px rgba(255,255,255,0.8); }
-        }
-
-        @keyframes wave {
+        @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px #4fc3f7; }
+            100% { text-shadow: 0 0 20px #4fc3f7, 0 0 30px #4fc3f7; }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.7; }
-            25% { transform: translate(20px, -20px) rotate(5deg); opacity: 1; }
-            50% { transform: translate(10px, -40px) rotate(0deg); opacity: 0.5; }
-            75% { transform: translate(-20px, -20px) rotate(-5deg); opacity: 1; }
-        }
-
-        @keyframes waveMove {
-            0%, 100% { transform: translateX(-50%) translateY(0px); }
-            50% { transform: translateX(-50%) translateY(-10px); }
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: particleFloat 3s linear infinite;
-        }
-
-        @keyframes particleFloat {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 1; transform: translateY(90vh) scale(1); }
-            90% { opacity: 1; transform: translateY(10vh) scale(1); }
-            100% { transform: translateY(0) scale(0); opacity: 0; }
-        }
-
-        .mouse-trail {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000;
-            animation: trailFade 0.5s ease-out forwards;
-        }
-
-        @keyframes trailFade {
-            0% { opacity: 0.8; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0); }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
         }
 
         .nav-button {
@@ -291,7 +242,7 @@
             border: 2px solid #ffe81f;
             padding: 15px 25px;
             border-radius: 50px;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
@@ -301,7 +252,7 @@
             gap: 10px;
             box-shadow: 0 0 20px rgba(255, 232, 31, 0.5);
             transition: all 0.3s ease;
-            animation: buttonPulse 2s ease-in-out infinite;
+            animation: buttonGlow 2s ease-in-out infinite alternate;
         }
         
         .nav-button:hover {
@@ -311,192 +262,323 @@
             border-color: #fff;
         }
         
-        .nav-button:active {
-            transform: scale(0.95);
-        }
-        
-        @keyframes buttonPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes buttonGlow {
+            0% { box-shadow: 0 0 20px rgba(255, 232, 31, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(255, 232, 31, 0.8), 0 0 40px rgba(255, 255, 255, 0.3); }
         }
         
         .button-icon {
             font-size: 1.2rem;
-            animation: bounce 1s ease-in-out infinite;
+            animation: spin 3s linear infinite;
         }
         
-        .nav-links {
-            display: none;
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .score {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            color: #ffe81f;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ffe81f;
+            z-index: 1000;
+        }
+
+        .lightsaber-colors {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .color-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #ffe81f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .color-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .color-button.blue { background: #4fc3f7; }
+        .color-button.red { background: #ff4444; }
+        .color-button.green { background: #4ade80; }
+        .color-button.purple { background: #a855f7; }
+
+        .target {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #ff4444;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,68,68,0.3) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 400;
+            animation: targetFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes targetFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
         }
     </style>
 </head>
 <body>
     <a href="index.html" class="nav-button">
-        <span class="button-icon">🚀</span>
-        <span>Switch to Star Wars Mode</span>
+        <span class="button-icon">⭐</span>
+        <span>Classic Star Wars</span>
     </a>
     <a href="prashant-bio.html" class="nav-button" style="top: 130px;">
         <span class="button-icon">👤</span>
         <span>Prashant Bio</span>
     </a>
 
-    <div class="nav-links">
-        <a href="index.html">Star Wars Version</a>
-        <a href="hello-world-2.html">Movement Version</a>
+    <div class="score">
+        Force Level: <span id="score">0</span>
     </div>
 
-    <div class="bouncing-balls">
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-    </div>
+    <div class="stars" id="stars"></div>
 
-    <div class="rotating-circles">
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-    </div>
-
-    <div class="floating-words">
-        <div class="word">MOVEMENT</div>
-        <div class="word">ANIMATION</div>
-        <div class="word">DYNAMIC</div>
-        <div class="word">FLUID</div>
-        <div class="word">ENERGY</div>
-        <div class="word">LIFE</div>
+    <div class="floating-elements">
+        <div class="floating-element">⚔️ JEDI</div>
+        <div class="floating-element">🌌 FORCE</div>
+        <div class="floating-element">⭐ POWER</div>
+        <div class="floating-element">🚀 DESTINY</div>
+        <div class="floating-element">💫 BALANCE</div>
+        <div class="floating-element">🌠 WISDOM</div>
     </div>
 
     <div class="container">
-        <h1 class="title" onclick="createParticleExplosion(event)">Hello World!</h1>
-        <p class="subtitle">Welcome to the movement edition</p>
+        <h1 class="title">Hello World!</h1>
+        <p class="subtitle">Jedi Training Academy</p>
+        <div class="instructions">
+            Move your lightsaber • Click to unleash Force powers • Hit targets to gain Force points
+        </div>
     </div>
 
-    <div class="wave-container">
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
+    <div class="lightsaber" id="lightsaber"></div>
+    <div class="lightsaber-hilt" id="lightsaber-hilt"></div>
+
+    <div class="lightsaber-colors">
+        <div class="color-button blue" onclick="changeLightsaberColor('blue')"></div>
+        <div class="color-button red" onclick="changeLightsaberColor('red')"></div>
+        <div class="color-button green" onclick="changeLightsaberColor('green')"></div>
+        <div class="color-button purple" onclick="changeLightsaberColor('purple')"></div>
     </div>
 
     <script>
-        // Particle explosion on click
-        function createParticleExplosion(event) {
-            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+        let score = 0;
+        let lightsaberColor = 'blue';
+        let mouseX = 0;
+        let mouseY = 0;
+        let targets = [];
+
+        // Create star field
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Update lightsaber position
+        function updateLightsaber(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
             
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'absolute';
-                particle.style.left = event.clientX + 'px';
-                particle.style.top = event.clientY + 'px';
-                particle.style.width = '8px';
-                particle.style.height = '8px';
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.borderRadius = '50%';
-                particle.style.pointerEvents = 'none';
-                particle.style.zIndex = '1000';
+            const lightsaber = document.getElementById('lightsaber');
+            const hilt = document.getElementById('lightsaber-hilt');
+            
+            lightsaber.style.left = (mouseX - 4) + 'px';
+            lightsaber.style.top = (mouseY - 120) + 'px';
+            
+            hilt.style.left = (mouseX - 6) + 'px';
+            hilt.style.top = (mouseY - 15) + 'px';
+
+            // Check for target hits
+            checkTargetHits();
+        }
+
+        // Change lightsaber color
+        function changeLightsaberColor(color) {
+            lightsaberColor = color;
+            const lightsaber = document.getElementById('lightsaber');
+            lightsaber.className = `lightsaber ${color}`;
+        }
+
+        // Create Force lightning effect
+        function createForceLightning(x, y) {
+            const lightning = document.createElement('div');
+            lightning.className = 'force-lightning';
+            lightning.style.left = x + 'px';
+            lightning.style.top = y + 'px';
+            
+            for (let i = 0; i < 5; i++) {
+                const bolt = document.createElement('div');
+                bolt.className = 'lightning-bolt';
+                bolt.style.left = (Math.random() - 0.5) * 100 + 'px';
+                bolt.style.top = (Math.random() - 0.5) * 100 + 'px';
+                bolt.style.height = Math.random() * 80 + 20 + 'px';
+                bolt.style.transform = `rotate(${Math.random() * 360}deg)`;
+                lightning.appendChild(bolt);
+            }
+            
+            document.body.appendChild(lightning);
+            
+            setTimeout(() => {
+                lightning.remove();
+            }, 200);
+        }
+
+        // Create Force wave
+        function createForceWave(x, y) {
+            const wave = document.createElement('div');
+            wave.className = 'force-wave';
+            wave.style.left = (x - 10) + 'px';
+            wave.style.top = (y - 10) + 'px';
+            document.body.appendChild(wave);
+            
+            setTimeout(() => {
+                wave.remove();
+            }, 1000);
+        }
+
+        // Create sparks
+        function createSparks(x, y, count = 10) {
+            for (let i = 0; i < count; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.left = x + 'px';
+                spark.style.top = y + 'px';
                 
-                const angle = (Math.PI * 2 * i) / 20;
-                const velocity = 100 + Math.random() * 100;
+                const angle = (Math.PI * 2 * i) / count;
+                const velocity = 50 + Math.random() * 50;
                 const vx = Math.cos(angle) * velocity;
                 const vy = Math.sin(angle) * velocity;
                 
-                document.body.appendChild(particle);
+                document.body.appendChild(spark);
                 
-                let x = event.clientX;
-                let y = event.clientY;
+                let sparkX = x;
+                let sparkY = y;
                 let opacity = 1;
                 
-                function animateParticle() {
-                    x += vx * 0.02;
-                    y += vy * 0.02;
+                function animateSpark() {
+                    sparkX += vx * 0.02;
+                    sparkY += vy * 0.02;
                     opacity -= 0.02;
                     
-                    particle.style.left = x + 'px';
-                    particle.style.top = y + 'px';
-                    particle.style.opacity = opacity;
+                    spark.style.left = sparkX + 'px';
+                    spark.style.top = sparkY + 'px';
+                    spark.style.opacity = opacity;
                     
                     if (opacity > 0) {
-                        requestAnimationFrame(animateParticle);
+                        requestAnimationFrame(animateSpark);
                     } else {
-                        particle.remove();
+                        spark.remove();
                     }
                 }
                 
-                animateParticle();
+                animateSpark();
             }
         }
 
-        // Mouse trail effect
-        document.addEventListener('mousemove', (e) => {
-            const trail = document.createElement('div');
-            trail.className = 'mouse-trail';
-            trail.style.left = e.clientX - 4 + 'px';
-            trail.style.top = e.clientY - 4 + 'px';
-            document.body.appendChild(trail);
+        // Create training targets
+        function createTarget() {
+            const target = document.createElement('div');
+            target.className = 'target';
+            target.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+            target.style.top = Math.random() * (window.innerHeight - 60) + 'px';
             
-            setTimeout(() => {
-                if (trail.parentNode) {
-                    trail.remove();
-                }
-            }, 500);
-        });
-
-        // Random particle generation
-        function createRandomParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.animationDelay = Math.random() * 2 + 's';
-            document.body.appendChild(particle);
+            const targetData = {
+                element: target,
+                x: parseInt(target.style.left),
+                y: parseInt(target.style.top),
+                hit: false
+            };
             
+            targets.push(targetData);
+            document.body.appendChild(target);
+            
+            // Remove target after 5 seconds if not hit
             setTimeout(() => {
-                if (particle.parentNode) {
-                    particle.remove();
+                if (!targetData.hit && target.parentNode) {
+                    target.remove();
+                    targets = targets.filter(t => t !== targetData);
                 }
-            }, 3000);
+            }, 5000);
         }
 
-        // Create random particles periodically
+        // Check for target hits
+        function checkTargetHits() {
+            targets.forEach((target, index) => {
+                if (target.hit) return;
+                
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - (target.x + 30), 2) + 
+                    Math.pow(mouseY - (target.y + 30), 2)
+                );
+                
+                if (distance < 50) {
+                    target.hit = true;
+                    target.element.style.background = 'radial-gradient(circle, rgba(76,195,247,0.8) 0%, transparent 70%)';
+                    target.element.style.borderColor = '#4fc3f7';
+                    target.element.style.boxShadow = '0 0 20px #4fc3f7';
+                    
+                    createSparks(target.x + 30, target.y + 30, 15);
+                    score += 10;
+                    document.getElementById('score').textContent = score;
+                    
+                    setTimeout(() => {
+                        if (target.element.parentNode) {
+                            target.element.remove();
+                        }
+                        targets.splice(index, 1);
+                    }, 500);
+                }
+            });
+        }
+
+        // Event listeners
+        document.addEventListener('mousemove', updateLightsaber);
+
+        document.addEventListener('click', (e) => {
+            createForceLightning(e.clientX, e.clientY);
+            createForceWave(e.clientX, e.clientY);
+            createSparks(e.clientX, e.clientY, 8);
+        });
+
+        // Initialize
+        createStars();
+        
+        // Create targets periodically
         setInterval(() => {
-            if (Math.random() < 0.5) {
-                createRandomParticle();
+            if (targets.length < 3) {
+                createTarget();
             }
         }, 2000);
 
-        // Add some interactive movement to the balls
-        document.addEventListener('mousemove', (e) => {
-            const balls = document.querySelectorAll('.ball');
-            balls.forEach((ball, index) => {
-                const rect = ball.getBoundingClientRect();
-                const ballCenterX = rect.left + rect.width / 2;
-                const ballCenterY = rect.top + rect.height / 2;
-                
-                const deltaX = e.clientX - ballCenterX;
-                const deltaY = e.clientY - ballCenterY;
-                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                
-                if (distance < 100) {
-                    const force = (100 - distance) / 100;
-                    const moveX = deltaX * force * 0.1;
-                    const moveY = deltaY * force * 0.1;
-                    
-                    ball.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                }
-            });
-        });
-
-        // Reset ball positions when mouse leaves
-        document.addEventListener('mouseleave', () => {
-            const balls = document.querySelectorAll('.ball');
-            balls.forEach(ball => {
-                ball.style.transform = 'translate(0px, 0px)';
-            });
-        });
+        // Create initial targets
+        setTimeout(() => createTarget(), 1000);
+        setTimeout(() => createTarget(), 2000);
     </script>
 </body>
 </html> 
