@@ -188,9 +188,57 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        
+        /* Music Control Button */
+        .music-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1000;
+            background: linear-gradient(45deg, #ffe81f, #ffb300);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 232, 31, 0.5);
+            transition: all 0.3s ease;
+            animation: musicPulse 2s ease-in-out infinite alternate;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .music-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 232, 31, 0.8);
+        }
+        
+        .music-button.playing {
+            animation: musicPulse 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes musicPulse {
+            0% { box-shadow: 0 0 20px rgba(255, 232, 31, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(255, 232, 31, 0.8), 0 0 40px rgba(255, 255, 255, 0.3); }
+        }
     </style>
 </head>
 <body>
+    <!-- Star Wars Theme Music -->
+    <audio id="starWarsTheme" loop>
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+        <!-- Using a placeholder audio file - you can replace with actual Star Wars theme -->
+    </audio>
+    
+    <!-- Music Control Button -->
+    <button class="music-button" id="musicButton" onclick="toggleMusic()">
+        🎵
+    </button>
+    
     <a href="hello-world-2.html" class="nav-button">
         <span class="button-icon">⚔️</span>
         <span>Young Jedi Training Academy</span>
@@ -321,6 +369,163 @@
                 }, 300);
             }, 100);
         });
+        
+        // Star Wars Theme Music Control
+        let audioContext;
+        let isPlaying = false;
+        let currentOscillators = [];
+        
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        function toggleMusic() {
+            initAudio();
+            const button = document.getElementById('musicButton');
+            
+            if (isPlaying) {
+                stopMusic();
+                button.textContent = '🎵';
+                button.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                playStarWarsTheme();
+                button.textContent = '🔇';
+                button.classList.add('playing');
+                isPlaying = true;
+            }
+        }
+        
+        function stopMusic() {
+            currentOscillators.forEach(osc => {
+                try {
+                    osc.stop();
+                } catch (e) {
+                    // Oscillator already stopped
+                }
+            });
+            currentOscillators = [];
+        }
+        
+        function playStarWarsTheme() {
+            if (!audioContext) return;
+            
+            stopMusic(); // Stop any existing music
+            
+            // More sophisticated Star Wars Main Theme with harmonies
+            const melody = [
+                { freq: 392, duration: 0.6 }, // G
+                { freq: 392, duration: 0.6 }, // G
+                { freq: 392, duration: 0.6 }, // G
+                { freq: 523, duration: 1.8 }, // C
+                { freq: 784, duration: 1.8 }, // G
+                { freq: 698, duration: 0.6 }, // F
+                { freq: 659, duration: 0.6 }, // E
+                { freq: 587, duration: 0.6 }, // D
+                { freq: 1047, duration: 1.8 }, // C
+                { freq: 784, duration: 1.2 }, // G
+                { freq: 698, duration: 0.6 }, // F
+                { freq: 659, duration: 0.6 }, // E
+                { freq: 587, duration: 0.6 }, // D
+                { freq: 1047, duration: 1.8 }, // C
+                { freq: 784, duration: 1.2 }, // G
+                { freq: 698, duration: 0.6 }, // F
+                { freq: 659, duration: 0.6 }, // E
+                { freq: 698, duration: 0.6 }, // F
+                { freq: 587, duration: 1.8 }  // D
+            ];
+            
+            // Bass line for depth
+            const bass = [
+                { freq: 196, duration: 0.6 }, // G
+                { freq: 196, duration: 0.6 }, // G
+                { freq: 196, duration: 0.6 }, // G
+                { freq: 261, duration: 1.8 }, // C
+                { freq: 392, duration: 1.8 }, // G
+                { freq: 349, duration: 0.6 }, // F
+                { freq: 329, duration: 0.6 }, // E
+                { freq: 293, duration: 0.6 }, // D
+                { freq: 523, duration: 1.8 }, // C
+                { freq: 392, duration: 1.2 }, // G
+                { freq: 349, duration: 0.6 }, // F
+                { freq: 329, duration: 0.6 }, // E
+                { freq: 293, duration: 0.6 }, // D
+                { freq: 523, duration: 1.8 }, // C
+                { freq: 392, duration: 1.2 }, // G
+                { freq: 349, duration: 0.6 }, // F
+                { freq: 329, duration: 0.6 }, // E
+                { freq: 349, duration: 0.6 }, // F
+                { freq: 293, duration: 1.8 }  // D
+            ];
+            
+            let currentTime = audioContext.currentTime;
+            
+            // Create orchestral layers
+            function createInstrument(frequencies, waveType, volume, filterFreq) {
+                frequencies.forEach((note, index) => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    const filter = audioContext.createBiquadFilter();
+                    
+                    oscillator.type = waveType;
+                    oscillator.frequency.value = note.freq;
+                    
+                    filter.type = 'lowpass';
+                    filter.frequency.value = filterFreq;
+                    filter.Q.value = 1;
+                    
+                    gainNode.gain.setValueAtTime(0, currentTime);
+                    gainNode.gain.linearRampToValueAtTime(volume, currentTime + 0.2);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + note.duration);
+                    
+                    oscillator.connect(filter);
+                    filter.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.start(currentTime);
+                    oscillator.stop(currentTime + note.duration);
+                    
+                    currentOscillators.push(oscillator);
+                    currentTime += note.duration;
+                });
+            }
+            
+            // Reset time for layering
+            currentTime = audioContext.currentTime;
+            
+            // Main melody - brass-like
+            createInstrument(melody, 'sawtooth', 0.15, 2000);
+            
+            // Bass line - deeper
+            createInstrument(bass, 'triangle', 0.08, 800);
+            
+            // Add subtle harmony
+            const harmony = melody.map(note => ({
+                freq: note.freq * 1.25, // Perfect fifth
+                duration: note.duration
+            }));
+            createInstrument(harmony, 'sine', 0.06, 1500);
+            
+            // Calculate total duration
+            const totalDuration = melody.reduce((sum, note) => sum + note.duration, 0);
+            
+            // Loop the theme
+            setTimeout(() => {
+                if (isPlaying) {
+                    playStarWarsTheme();
+                }
+            }, totalDuration * 1000);
+        }
+        
+        // Auto-play music when page loads (after user interaction)
+        document.addEventListener('click', () => {
+            if (!isPlaying && audioContext) {
+                // Don't auto-start, let user control
+            }
+        }, { once: true });
+        
     </script>
 </body>
 </html> 
