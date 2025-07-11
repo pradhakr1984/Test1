@@ -81,26 +81,10 @@
       max-width: 500px;
     }
     
-    /* Navigation Dots */
-    .nav-dots {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      padding: 40px 0;
-    }
-    
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #cbd5e1;
-      transition: all 0.3s ease;
-    }
-    
-    .dot.active {
-      background: #3b82f6;
-      transform: scale(1.2);
-    }
+         /* Bridge Spacing */
+     .bridge-spacing {
+       padding: 60px 0;
+     }
     
     /* Bridge Section */
     .bridge-section {
@@ -180,22 +164,31 @@
       border-bottom: 4px solid transparent;
     }
     
-    .connector-icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 32px;
-      height: 32px;
-      background: #3b82f6;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 14px;
-      font-weight: 600;
-    }
+         .connector-icon {
+       position: absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+       width: 40px;
+       height: 40px;
+       background: #ffffff;
+       border: 2px solid #3b82f6;
+       border-radius: 50%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       color: #3b82f6;
+       font-size: 16px;
+       font-weight: 600;
+       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+       transition: all 0.3s ease;
+       animation: pulse-bridge 3s ease-in-out infinite;
+     }
+     
+     @keyframes pulse-bridge {
+       0%, 100% { transform: translate(-50%, -50%) scale(1); }
+       50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3); }
+     }
     
     /* Experience Section */
     .experience-section {
@@ -426,13 +419,8 @@
       </div>
     </section>
 
-    <!-- Navigation Dots -->
-    <div class="nav-dots">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
+         <!-- Bridge Spacing -->
+     <div class="bridge-spacing"></div>
 
     <!-- Bridge Section -->
     <section class="bridge-section">
@@ -442,10 +430,10 @@
           <h3>Traditional Excellence</h3>
           <p>17+ years of proven expertise in high-yield and investment grade trading, risk management, and institutional finance across major global banks.</p>
         </div>
-        <div class="bridge-connector">
-          <div class="connector-line"></div>
-          <div class="connector-icon">⚡</div>
-        </div>
+                 <div class="bridge-connector">
+           <div class="connector-line"></div>
+           <div class="connector-icon">🌉</div>
+         </div>
         <div class="bridge-side">
           <h3>Disruptive Innovation</h3>
           <p>Pioneering AI, blockchain, and algorithmic solutions that transform traditional financial operations and create new market opportunities.</p>
