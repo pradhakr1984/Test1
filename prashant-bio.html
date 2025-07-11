@@ -3,83 +3,519 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prashant Radhakrishnan - Bio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Prashant Radhakrishnan - Executive Leadership</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
-      margin: 0;
+      background: #fefefe;
       color: #1e293b;
+      line-height: 1.6;
+      font-size: 16px;
     }
+    
     .container {
-      max-width: 600px;
-      margin: 60px auto;
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(30,64,175,0.10);
-      padding: 40px 32px 32px 32px;
-      text-align: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
+    
+    /* Header Section */
+    .header {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      padding: 60px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .profile-image {
+      flex-shrink: 0;
+    }
+    
     .profile-pic {
-      width: 120px;
-      height: 120px;
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid #2563eb;
-      box-shadow: 0 4px 16px rgba(30,64,175,0.10);
-      margin-bottom: 24px;
+      border: 4px solid #ffffff;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     }
-    h1 {
-      font-size: 2rem;
-      color: #1e40af;
+    
+    .header-text {
+      flex: 1;
+    }
+    
+    .header-text h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 12px;
+      letter-spacing: -0.025em;
+    }
+    
+    .header-text .title {
+      font-size: 1.25rem;
+      color: #3b82f6;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .header-text .tagline {
+      font-size: 1.1rem;
+      color: #64748b;
+      font-weight: 400;
+      line-height: 1.5;
+      max-width: 500px;
+    }
+    
+    /* Navigation Dots */
+    .nav-dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px 0;
+    }
+    
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: all 0.3s ease;
+    }
+    
+    .dot.active {
+      background: #3b82f6;
+      transform: scale(1.2);
+    }
+    
+    /* Bridge Section */
+    .bridge-section {
+      padding: 80px 0;
+      background: #ffffff;
+    }
+    
+    .bridge-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 60px;
+      letter-spacing: -0.025em;
+    }
+    
+    .bridge-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 40px;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .bridge-side {
+      padding: 40px;
+      background: #f8fafc;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .bridge-side:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bridge-side h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 16px;
+    }
+    
+    .bridge-side p {
+      color: #64748b;
+      line-height: 1.6;
+    }
+    
+    .bridge-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 60px;
+    }
+    
+    .connector-line {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      position: relative;
+    }
+    
+    .connector-line::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid #8b5cf6;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+    
+    .connector-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 32px;
+      height: 32px;
+      background: #3b82f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    /* Experience Section */
+    .experience-section {
+      padding: 80px 0;
+      background: #f8fafc;
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 60px;
+      letter-spacing: -0.025em;
+    }
+    
+    .experience-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .experience-item {
+      margin-bottom: 40px;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .experience-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    
+    .experience-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #334155;
+      margin-bottom: 0;
+    }
+    
+    /* Metrics Section */
+    .metrics-section {
+      padding: 80px 0;
+      background: #ffffff;
+    }
+    
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .metric-item {
+      text-align: center;
+      padding: 30px 20px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .metric-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    
+    .metric-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3b82f6;
       margin-bottom: 8px;
     }
-    .subtitle {
-      color: #2563eb;
-      font-weight: 600;
-      margin-bottom: 24px;
-      font-size: 1.1rem;
-    }
-    .bio {
-      font-size: 1.05rem;
-      color: #334155;
-      margin-bottom: 24px;
-      line-height: 1.7;
-    }
-    .contact {
-      margin-top: 18px;
+    
+    .metric-label {
       color: #64748b;
-      font-size: 1rem;
+      font-weight: 500;
+      font-size: 0.95rem;
     }
-    .contact a {
-      color: #2563eb;
+    
+    /* Contact Section */
+    .contact-section {
+      padding: 80px 0;
+      background: #f8fafc;
+      text-align: center;
+    }
+    
+    .contact-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .contact-text {
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: #3b82f6;
+      color: white;
       text-decoration: none;
-      margin-left: 8px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
-    @media (max-width: 700px) {
-      .container { padding: 16px; }
-      .profile-pic { width: 90px; height: 90px; }
+    
+    .contact-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+    }
+    
+    .contact-btn.secondary {
+      background: #ffffff;
+      color: #3b82f6;
+      border: 1px solid #3b82f6;
+    }
+    
+    .contact-btn.secondary:hover {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    /* Footer */
+    .footer {
+      padding: 40px 0;
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: center;
+    }
+    
+    .footer p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+      }
+      
+      .header-text h1 {
+        font-size: 2rem;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+      
+      .bridge-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      
+      .bridge-connector {
+        transform: rotate(90deg);
+      }
+      
+      .connector-line {
+        width: 40px;
+      }
+      
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      
+      .contact-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .contact-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .profile-pic {
+        width: 140px;
+        height: 140px;
+      }
+      
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .metric-number {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <img src="Prashant Radhakrishnan headshot.png" alt="Prashant Radhakrishnan" class="profile-pic">
-    <h1>Prashant Radhakrishnan</h1>
-    <div class="subtitle">Managing Director in Credit Trading</div>
-    <div class="bio">
-      <h2 style="color: #1e40af; font-size: 1.4rem; margin: 0 0 20px 0; text-align: center;">Executive Bio</h2>
-      From the trading floors of global banks to executive leadership roles, I've spent over 17 years building and leading high-performing teams that consistently deliver exceptional results in volatile markets. As a Managing Director with deep expertise in high-yield and investment grade trading, I've generated over $400M in P&L across multiple market cycles while managing multi billion-dollar portfolios and driving strategic innovation.<br><br>
-      My proven track record includes transforming client relationships, pioneering ETF and algorithmic trading strategies that elevated market positions, and leading cross-functional teams through complex risk management and strategic execution. I've successfully navigated trading roles at RBC Capital Markets, Bank of America Merrill Lynch, and Deutsche Bank, consistently delivering multimillion-dollar returns even during the most challenging economic periods.<br><br>
-      Today, I'm passionate about leveraging this extensive financial expertise to help businesses navigate complex market dynamics while exploring how emerging technologies like AI and blockchain can create new opportunities for growth and efficiency. My focus is on connecting proven financial leadership with forward-thinking strategy—bridging traditional market expertise with innovative approaches that drive sustainable competitive advantage.<br><br>
-      Whether you're seeking seasoned C-suite leadership, strategic portfolio management expertise, or guidance on navigating the evolving intersection of finance and technology, I bring a unique combination of hands-on trading experience, team leadership capabilities, and strategic vision to help organizations achieve their most ambitious goals.
+    <!-- Header Section -->
+    <section class="header">
+      <div class="header-content">
+        <div class="profile-image">
+          <img src="Prashant Radhakrishnan headshot.png" alt="Prashant Radhakrishnan" class="profile-pic">
+        </div>
+        <div class="header-text">
+          <h1>Prashant Radhakrishnan</h1>
+          <div class="title">Managing Director in Credit Trading</div>
+          <div class="tagline">Bridging traditional finance expertise with innovative technology solutions to create sustainable competitive advantages in today's evolving markets.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Dots -->
+    <div class="nav-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
-    <div class="contact">
-      <span><b>Contact:</b> pradhakr@gmail.com</span> ·
-      <a href="https://www.linkedin.com/in/prashant-radhakrishnan/" target="_blank">LinkedIn</a>
-    </div>
+
+    <!-- Bridge Section -->
+    <section class="bridge-section">
+      <h2 class="bridge-title">Where Traditional Finance Meets Innovation</h2>
+      <div class="bridge-container">
+        <div class="bridge-side">
+          <h3>Traditional Excellence</h3>
+          <p>17+ years of proven expertise in high-yield and investment grade trading, risk management, and institutional finance across major global banks.</p>
+        </div>
+        <div class="bridge-connector">
+          <div class="connector-line"></div>
+          <div class="connector-icon">⚡</div>
+        </div>
+        <div class="bridge-side">
+          <h3>Disruptive Innovation</h3>
+          <p>Pioneering AI, blockchain, and algorithmic solutions that transform traditional financial operations and create new market opportunities.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience-section">
+      <h2 class="section-title">Executive Experience</h2>
+      <div class="experience-content">
+        <div class="experience-item">
+          <p class="experience-text">From the trading floors of global banks to executive leadership roles, I've spent over 17 years building and leading high-performing teams that consistently deliver exceptional results in volatile markets. As a Managing Director with deep expertise in high-yield and investment grade trading, I've generated over $400M in P&L across multiple market cycles while managing multi billion-dollar portfolios and driving strategic innovation.</p>
+        </div>
+        
+        <div class="experience-item">
+          <p class="experience-text">My proven track record includes transforming client relationships, pioneering ETF and algorithmic trading strategies that elevated market positions, and leading cross-functional teams through complex risk management and strategic execution. I've successfully navigated trading roles at RBC Capital Markets, Bank of America Merrill Lynch, and Deutsche Bank, consistently delivering multimillion-dollar returns even during the most challenging economic periods.</p>
+        </div>
+        
+        <div class="experience-item">
+          <p class="experience-text">Today, I'm passionate about leveraging this extensive financial expertise to help businesses navigate complex market dynamics while exploring how emerging technologies like AI and blockchain can create new opportunities for growth and efficiency. My focus is on connecting proven financial leadership with forward-thinking strategy—bridging traditional market expertise with innovative approaches that drive sustainable competitive advantage.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metrics Section -->
+    <section class="metrics-section">
+      <h2 class="section-title">Track Record</h2>
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-number">17+</div>
+          <div class="metric-label">Years Leadership</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">$400M+</div>
+          <div class="metric-label">P&L Generated</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">Multi-Billion</div>
+          <div class="metric-label">Portfolio Scale</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">3</div>
+          <div class="metric-label">Major Institutions</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+      <h2 class="section-title">Let's Connect</h2>
+      <div class="contact-content">
+        <p class="contact-text">Whether you're seeking seasoned C-suite leadership, strategic portfolio management expertise, or guidance on navigating the evolving intersection of finance and technology, I bring a unique combination of hands-on trading experience, team leadership capabilities, and strategic vision to help organizations achieve their most ambitious goals.</p>
+        <div class="contact-buttons">
+          <a href="mailto:pradhakr@gmail.com" class="contact-btn">
+            <span>📧</span>
+            Email Me
+          </a>
+          <a href="https://www.linkedin.com/in/prashant-radhakrishnan/" target="_blank" class="contact-btn secondary">
+            <span>💼</span>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2024 Prashant Radhakrishnan. All rights reserved.</p>
+    </footer>
   </div>
 </body>
 </html> 
