@@ -144,25 +144,38 @@
       height: 60px;
     }
     
-    .connector-line {
-      width: 60px;
-      height: 2px;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      position: relative;
-    }
-    
-    .connector-line::after {
-      content: '';
-      position: absolute;
-      right: -8px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-left: 8px solid #8b5cf6;
-      border-top: 4px solid transparent;
-      border-bottom: 4px solid transparent;
-    }
+         .connector-line {
+       width: 80px;
+       height: 2px;
+       background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+       position: relative;
+     }
+     
+     .connector-line::before {
+       content: '';
+       position: absolute;
+       left: -8px;
+       top: 50%;
+       transform: translateY(-50%);
+       width: 0;
+       height: 0;
+       border-right: 8px solid #3b82f6;
+       border-top: 4px solid transparent;
+       border-bottom: 4px solid transparent;
+     }
+     
+     .connector-line::after {
+       content: '';
+       position: absolute;
+       right: -8px;
+       top: 50%;
+       transform: translateY(-50%);
+       width: 0;
+       height: 0;
+       border-left: 8px solid #8b5cf6;
+       border-top: 4px solid transparent;
+       border-bottom: 4px solid transparent;
+     }
     
          .connector-icon {
        position: absolute;
@@ -422,9 +435,10 @@
          <!-- Bridge Spacing -->
      <div class="bridge-spacing"></div>
 
-    <!-- Bridge Section -->
-    <section class="bridge-section">
-      <h2 class="bridge-title">Where Traditional Finance Meets Innovation</h2>
+         <!-- Bridge Section -->
+     <section class="bridge-section">
+       <h2 class="bridge-title">Where Traditional Finance Meets Innovation</h2>
+       <p style="text-align: center; color: #64748b; font-size: 1.1rem; margin-bottom: 40px; font-style: italic;">A continuous cycle of mutual enhancement</p>
       <div class="bridge-container">
         <div class="bridge-side">
           <h3>Traditional Excellence</h3>
@@ -432,7 +446,7 @@
         </div>
                  <div class="bridge-connector">
            <div class="connector-line"></div>
-           <div class="connector-icon">🌉</div>
+           <div class="connector-icon">🔄</div>
          </div>
         <div class="bridge-side">
           <h3>Disruptive Innovation</h3>
