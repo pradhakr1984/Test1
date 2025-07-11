@@ -76,12 +76,52 @@
             background: #fff;
             position: absolute;
             border-radius: 50%;
-            animation: twinkle 3s infinite;
+            animation: starWarp 4s linear infinite;
         }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+        @keyframes starWarp {
+            0% {
+                transform: translateZ(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+                transform: translateZ(100px) scale(1);
+            }
+            100% {
+                transform: translateZ(300px) scale(10);
+                opacity: 0;
+            }
+        }
+
+        /* Star streak effect for moving stars */
+        .star.moving {
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            border-radius: 0;
+            height: 1px !important;
+            animation: starStreak 3s linear infinite;
+        }
+
+        @keyframes starStreak {
+            0% {
+                transform: translateX(-100vw) scaleX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateX(-80vw) scaleX(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateX(100vw) scaleX(3);
+            }
+            100% {
+                transform: translateX(120vw) scaleX(0);
+                opacity: 0;
+            }
         }
 
         /* Game container */
@@ -1061,17 +1101,51 @@
         // Create animated stars
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            const numStars = 100;
+            const numStars = 150;
             
             for (let i = 0; i < numStars; i++) {
                 const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
-                star.style.animationDelay = Math.random() * 3 + 's';
+                
+                // Mix of regular stars and moving streak stars
+                if (Math.random() < 0.3) {
+                    // Moving streak stars (30% chance)
+                    star.className = 'star moving';
+                    star.style.left = '-10px';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.width = Math.random() * 50 + 10 + 'px';
+                    star.style.height = '1px';
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                } else {
+                    // Regular expanding stars (70% chance)
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.width = star.style.height = Math.random() * 2 + 1 + 'px';
+                    star.style.animationDelay = Math.random() * 4 + 's';
+                }
+                
                 starsContainer.appendChild(star);
             }
+            
+            // Continuously add new streak stars for dynamic movement
+            setInterval(() => {
+                if (Math.random() < 0.7) { // 70% chance every second
+                    const streakStar = document.createElement('div');
+                    streakStar.className = 'star moving';
+                    streakStar.style.left = '-10px';
+                    streakStar.style.top = Math.random() * 100 + '%';
+                    streakStar.style.width = Math.random() * 60 + 15 + 'px';
+                    streakStar.style.height = '1px';
+                    starsContainer.appendChild(streakStar);
+                    
+                    // Remove the star after animation completes
+                    setTimeout(() => {
+                        if (streakStar.parentNode) {
+                            streakStar.remove();
+                        }
+                    }, 3000);
+                }
+            }, 800);
         }
 
         // Player selection
